@@ -10,10 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 
 {
+    //setUpUi 함수로 this(MainWindow) 에 UI 요소들을 추가
     ui->setupUi(this);
 }
 
+//소멸자 호출
 MainWindow::~MainWindow()
 {
+    //동적으로 할당된 ui 삭제
     delete ui;
 }
