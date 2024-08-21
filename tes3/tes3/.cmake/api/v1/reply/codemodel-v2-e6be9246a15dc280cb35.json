@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-b7440892d147fdb4c424.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "tes3",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "tes3::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tes3-Debug-127f5ca4fb09429bd74a.json",
+					"name" : "tes3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tes3_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tes3_autogen-Debug-4da21f66d351651c04d4.json",
+					"name" : "tes3_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tes3_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tes3_autogen_timestamp_deps-Debug-22e48d8f57f2839afe0c.json",
+					"name" : "tes3_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/qtproject/tes3",
+		"source" : "D:/qtproject/tes3"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

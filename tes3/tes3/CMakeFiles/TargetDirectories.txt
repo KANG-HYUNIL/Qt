@@ -1,0 +1,9 @@
+D:/qtproject/tes3/CMakeFiles/tes3.dir
+D:/qtproject/tes3/CMakeFiles/edit_cache.dir
+D:/qtproject/tes3/CMakeFiles/rebuild_cache.dir
+D:/qtproject/tes3/CMakeFiles/list_install_components.dir
+D:/qtproject/tes3/CMakeFiles/install.dir
+D:/qtproject/tes3/CMakeFiles/install/local.dir
+D:/qtproject/tes3/CMakeFiles/install/strip.dir
+D:/qtproject/tes3/CMakeFiles/tes3_autogen_timestamp_deps.dir
+D:/qtproject/tes3/CMakeFiles/tes3_autogen.dir
