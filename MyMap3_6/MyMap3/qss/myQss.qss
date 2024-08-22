@@ -1,0 +1,58 @@
+*{
+    background-color: rgb(255, 255, 255);
+    font: 12pt "宋体";
+}
+
+
+QLineEdit{
+    height:60px;
+    margin:5px 5px;
+    background-color: rgb(255, 255, 255);
+    line-height: 50px;
+    border-radius: 8px;
+    border: 1px solid rgb(222, 226, 230);
+}
+
+QLineEdit:focus{
+    border-radius: 8px;
+    border:3px solid rgb(207, 226, 255);
+
+}
+
+QPushButton{
+        background-color:#0d6efd;
+        color:#ffffff;
+        border-radius: 2px;
+        width: 150px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+
+QPushButton:hover{
+ border:1px solid rgb(10, 88, 202);
+ background-color: rgb(10, 88, 202);
+}
+
+
+QPushButton#enlargeBtn{
+        background-color:#ffffff;
+        border-image: url(:/images/enlarge.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+
+QPushButton#reduceBtn{
+        background-color:#ffffff;
+        border-image: url(:/images/reduce.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
