@@ -3,4 +3,7 @@
         <file>images/enlarge.png</file>
         <file>images/reduce.png</file>
     </qresource>
+    <qresource prefix="/data">
+        <file>data/map (3)(1).osm</file>
+    </qresource>
 </RCC>

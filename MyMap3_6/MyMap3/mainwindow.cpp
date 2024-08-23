@@ -12,10 +12,16 @@
 #include <QJsonArray>
 #include <QFile>
 #include <QTimer>
+#include <QList>
+#include <QXmlStreamReader>
+#include <QPainter>
+#include <QtMath>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    nodes(),
+    ways()
 {
     ui->setupUi(this);
 
@@ -34,7 +40,72 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
+//read osm file, save node and way data
+void MainWindow::loadOsm(QString &fileName) {
+
+    QFile file(fileName);
+
+    //open file
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug()<<"file error";
+        return;
+    }
+
+
+    QXmlStreamReader xml(&file);
+    Way curWay;
+
+    //start raed
+    while (!xml.atEnd()) {
+
+        xml.readNext();
+
+        if (xml.isStartElement()) {
+
+            //add node
+            if (xml.name() == QStringLiteral("node")) {
+                QString id = xml.attributes().value("id").toString();
+                QString lon = xml.attributes().value("lon").toString();
+                QString lat = xml.attributes().value("lat").toString();
+                nodes.append(coordinatesStr(id, lon, lat));
+            }
+
+            //add way
+            else if (xml.name() == QStringLiteral("way")) {
+                curWay.id = xml.attributes().value("id").toString();
+            }
+
+            else if (xml.name() == QStringLiteral("nd")) {
+                QString id = xml.attributes().value("ref").toString();
+
+                curWay.nodeRefs.append(id);
+            }
+        } //if
+
+        else if (xml.isEndElement() && xml.name() == QStringLiteral("way")) {
+            ways.append(curWay);
+            curWay.nodeRefs.clear();
+        }
+
+    } //while
+    file.close();
+
+    // // Debug output
+    // for (const Way &way : ways) {
+    //     qDebug() << "Way ID:" << way.id;
+    //     for (const QString &nodeRef : way.nodeRefs) {
+    //         qDebug() << "Node Ref:" << nodeRef;
+    //     }
+    // }
+
+}//loadOsm
+
+
 void MainWindow::init(){
+
+    //read osm file
+    loadOsm(dataRoute);
+
     //网络管理对象
     m_ipManager =new QNetworkAccessManager(this);
     //请求响应事件
@@ -142,7 +213,7 @@ void MainWindow::init(){
              .arg(ak).arg(m_lng).arg(m_lat).arg(m_zoom);
      QUrl url(host+"?"+query_str);
 
-     //qDebug()<<host+"?"+query_str<<endl;
+     qDebug()<<host+"?"+query_str;
 
      //url 요청 보내기
      QNetworkRequest request(url);
@@ -186,12 +257,92 @@ void MainWindow::init(){
         QPixmap pixmap;
         if(pixmap.load(m_mapFileName)){
             ui->mapWidget->setStyleSheet("QWidget{border-image:url(./map.png);}");
+            drawWays(pixmap);
         }
 
     });
 
- }
+ }//onSendMapRequest
 
+ void MainWindow::drawWays(QPixmap &mapPixmap) {
+
+     //set painter, pen
+     QPainter painter(&mapPixmap);
+     painter.setPen(QPen(Qt::red, 2));
+
+     //ways 배열
+     for (Way &way : ways) {
+
+        //QPolygon 선언
+         QPolygon polygon;
+
+         //way의 node id들에 접근
+         for (QString &nodeRef : way.nodeRefs) {
+
+             //node id를 검색해 lat, lon 얻어내기
+             for (coordinatesStr &node : nodes) {
+                 if (node.id == nodeRef) {
+                     //debug
+                     qDebug() << node.id;
+
+                     QPoint pixelPos = latLonToPixel(node.lat.toDouble(), node.lon.toDouble());
+                     polygon << pixelPos;
+                    break;
+                }
+            }
+        }
+
+        //test code
+        double testLat = 39.7379309;
+        double testLon = 116.1647364;
+        QPoint testPixel = latLonToPixel(testLat, testLon);
+        qDebug() << "Test Pixel X:" << testPixel.x() << "Y:" << testPixel.y();
+
+        painter.drawPolyline(polygon);
+    }
+
+     painter.end();
+ }//drawWays
+
+ //change lat, lon into pixel point positions
+QPoint MainWindow::latLonToPixel(double lat, double lng) {
+
+    //get ui's width, height
+    int width = ui->mapWidget->width();
+    int height = ui->mapWidget->height();
+
+    //get center position
+    double centerX = width / 2.0;
+    double centerY = height / 2.0;
+
+    //zoom, wordl size
+    double zoom = pow(2, m_zoom);
+    double worldSize = 256 * zoom;
+
+    //change lat, lon to radians
+    double m_latRad = qDegreesToRadians(m_lat);
+    double m_lngRad = qDegreesToRadians(m_lng);
+
+    double latRad = qDegreesToRadians(lat);
+    double lngRad = qDegreesToRadians(lng);
+
+    double pixelX = ((lngRad - m_lngRad) / (2 * M_PI) + 0.5) * worldSize;
+
+    //calculate pixelY has logic problem
+    // double pixelY = (0.5 - log(tan(latRad / 2 + M_PI / 4)) / (2 * M_PI)) * worldSize;
+
+    double sinLat = sin(latRad);
+    double pixelY = (0.5 - (log((1 + sinLat) / (1 - sinLat)) / (4 * M_PI))) * worldSize;
+
+    pixelX = centerX + pixelX - (worldSize / 2.0);
+    pixelY = centerY - (pixelY - (worldSize / 2.0));
+
+    //debug
+    qDebug() << pixelX;
+    qDebug() << pixelY;
+
+    return QPoint(static_cast<int>(pixelX), static_cast<int>(pixelY) - 505400);
+ }
 
 
 MainWindow::~MainWindow()

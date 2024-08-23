@@ -5,6 +5,8 @@
 #include <QNetworkAccessManager>
 #include<QTimer>
 #include<QFile>
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -45,6 +47,48 @@ private:
     //响应对象 接收地图图片
     QNetworkReply *m_mapReply=NULL;
 
+    //node
+    struct coordinatesStr
+    {
+        QString id;
+        QString lon;
+        QString lat;
+
+
+        coordinatesStr() {}
+
+        coordinatesStr(const QString &id, QString &lon, QString &lat)
+            : id(id), lon(lon), lat(lat) {}
+
+        bool operator==(const coordinatesStr &other) const {
+            return id == other.id;
+        }
+    };
+
+    //way
+    struct Way {
+        QString id;
+        QList<QString> nodeRefs;
+
+        Way() {}
+
+        Way(const QString id)
+            : id(id) {}
+
+
+    };
+
+    //loading osm files
+    void loadOsm(QString &fileName);
+    //draw ways
+    void drawWays(QPixmap &mapPixmap);
+    //change lat, lot into pixel points
+    QPoint latLonToPixel(double lat, double lng);
+
+    QString dataRoute = ":/data/data/map (3)(1).osm";
+    QList<coordinatesStr> nodes;
+    QList<Way> ways;
+
     //初始化
     void init();
     //baidu App key
@@ -55,6 +99,9 @@ private:
     double m_lng;
     //纬度
     double m_lat;
+    //image width, height value
+    double width = 512;
+    double height = 256;
     //控制好地图的精度  高清或低清[3-18]
     int m_zoom=12;
     //当前所在的城市
