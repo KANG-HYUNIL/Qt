@@ -91,12 +91,12 @@ void MainWindow::loadOsm(QString &fileName) {
     file.close();
 
     // // Debug output
-    // for (const Way &way : ways) {
-    //     qDebug() << "Way ID:" << way.id;
-    //     for (const QString &nodeRef : way.nodeRefs) {
-    //         qDebug() << "Node Ref:" << nodeRef;
-    //     }
-    // }
+    for (const Way &way : ways) {
+        qDebug() << "Way ID:" << way.id;
+        for (const QString &nodeRef : way.nodeRefs) {
+            qDebug() << "Node Ref:" << nodeRef;
+        }
+    }
 
 }//loadOsm
 
@@ -282,8 +282,11 @@ void MainWindow::init(){
              //node id를 검색해 lat, lon 얻어내기
              for (coordinatesStr &node : nodes) {
                  if (node.id == nodeRef) {
+
                      //debug
                      qDebug() << node.id;
+                     qDebug() << node.lat.toDouble();
+                     qDebug() << node.lon.toDouble();
 
                      QPoint pixelPos = latLonToPixel(node.lat.toDouble(), node.lon.toDouble());
                      polygon << pixelPos;
@@ -293,10 +296,10 @@ void MainWindow::init(){
         }
 
         //test code
-        double testLat = 39.7379309;
-        double testLon = 116.1647364;
-        QPoint testPixel = latLonToPixel(testLat, testLon);
-        qDebug() << "Test Pixel X:" << testPixel.x() << "Y:" << testPixel.y();
+        // double testLat = 39.7379309;
+        // double testLon = 116.1647364;
+        // QPoint testPixel = latLonToPixel(testLat, testLon);
+        // qDebug() << "Test Pixel X:" << testPixel.x() << "Y:" << testPixel.y();
 
         painter.drawPolyline(polygon);
     }
@@ -338,10 +341,11 @@ QPoint MainWindow::latLonToPixel(double lat, double lng) {
     pixelY = centerY - (pixelY - (worldSize / 2.0));
 
     //debug
-    qDebug() << pixelX;
-    qDebug() << pixelY;
 
-    return QPoint(static_cast<int>(pixelX), static_cast<int>(pixelY) - 505400);
+    qDebug() << pixelY;
+    qDebug() << pixelX;
+
+    return QPoint(static_cast<int>(pixelX), static_cast<int>(pixelY));
  }
 
 
