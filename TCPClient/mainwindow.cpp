@@ -35,6 +35,44 @@ QString MainWindow::getLocalIP()
     return localIP;
 }
 
+bool MainWindow::getNameFromServer(QString clientId) {
+
+    if (tcpClient->state() == QAbstractSocket::ConnectedState) {
+        QByteArray queryRequest = "QUERY_NAME:" + clientId.toUtf8() + "\n";
+        tcpClient->write(queryRequest);
+
+        QEventLoop loop;
+
+        connect(tcpClient, &QTcpSocket::readyRead, &loop, &QEventLoop::quit);
+        QTimer::singleShot(5000, &loop, &QEventLoop::quit); // set timer
+        loop.exec(); // wait for server response
+
+        while (tcpClient->canReadLine()) {
+            QString line = tcpClient->readLine().trimmed();
+            ui->textEdit->appendPlainText("[in] " + line);
+
+            QStringList parts = line.split(';');
+            QString command = parts[0].split(':')[0];
+
+            if (command == "QUERY_NAME_RESULT") {
+                QString resultClientId = parts[0].split(':')[1];
+                QString resultUserName = parts[1].split(':')[1];
+
+                if (resultUserName == "null") {
+                    this->userName = clientId;
+                }
+                else {
+                    this->userName = resultUserName;
+                }
+
+                return true;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 //create unique Id and save at local
 void MainWindow::createId()
 {
@@ -55,9 +93,14 @@ void MainWindow::createId()
     }
     //set client id
     this->clientId = clientId;
-    //set default user name as client id
-    QString userName = clientId;
-    this->userName = userName;
+    // //set default user name as client id
+    // QString userName = clientId;
+
+    //이 아래에 사용자 이름을 서버에서 가지고 와, 사용자 이름 변수에 저장하는 과정 필요
+    if (!getNameFromServer(this->clientId)) {
+        this->userName = clientId;
+    }
+
 }
 
 void MainWindow::openDatabase()
@@ -74,15 +117,24 @@ void MainWindow::openDatabase()
 //change user name and update it to server
 void MainWindow::on_btnChangeName_clicked() {
 
+    QRegularExpression invalidCharPattern("^[a-zA-Z0-9_]+$");
+
     QString newUserName = ui->editUserName->text();
 
     if (newUserName.isEmpty()) {
         newUserName = clientId;
     }
 
-    this->userName = newUserName;
+    QRegularExpressionMatch match = invalidCharPattern.match(newUserName);
 
-    QByteArray changeRequest = "UPDATE_NAME:" + clientId.toUtf8() + ";NAME:" + userName.toUtf8() + "\n";
+    if (!match.hasMatch()) {
+        ui->textEdit->appendPlainText("**Error: User name cannot contain special characters like ';' or ':'.");
+        return;
+    }
+
+    //this->userName = newUserName;
+
+    QByteArray changeRequest = "UPDATE_NAME:" + clientId.toUtf8() + ";NAME:" + newUserName.toUtf8() + "\n";
     tcpClient->write(changeRequest);
 
 }
@@ -140,6 +192,8 @@ void MainWindow::do_connected()
     ui->textEdit->appendPlainText("[out] "+registrationRequest);
     tcpClient->write(registrationRequest); // send id and name data to server
 
+    setIdLabel();
+    setNameLabel();
 }
 
 //통신 끊어졌을 때, 연결 버튼 활성화, 비연결 버튼 비활성화
@@ -152,8 +206,27 @@ void MainWindow::do_disconnected()
 
 void MainWindow::do_socketReadyRead()
 {//readyRead()信号的槽函数
-    while(tcpClient->canReadLine())
-        ui->textEdit->appendPlainText("[in] "+tcpClient->readLine());
+    while(tcpClient->canReadLine()) {
+        QString line = tcpClient->readLine().trimmed();
+        ui->textEdit->appendPlainText("[in] "+line);
+
+        QStringList parts = line.split(';');
+        QString command = parts[0].split(':')[0];
+
+        if (command == "UPDATE_NAME_RESULT") {
+            QString status = parts[0].split(':')[1];
+
+            if (status == "SUCCESS") {
+                QString updatedUserName = parts[1].split(':')[1];
+                this->userName = updatedUserName;
+                ui->textEdit->appendPlainText("**User name updated successfully to " + updatedUserName);
+                setNameLabel();
+
+            } else {
+                ui->textEdit->appendPlainText("**Error: Failed to update user name.");
+            }
+        }
+    }
 }
 
 //socket의 상태가 바뀔 때 그 상태를 text로 ui 화면에 띄우는 함수
@@ -216,3 +289,13 @@ void MainWindow::on_btnSend_clicked()
     str.append('\n');
     tcpClient->write(str);
 }
+
+void MainWindow::setIdLabel(){
+    ui->userIdLabel->setText("User ID : " + clientId);
+}
+
+void MainWindow::setNameLabel(){
+    ui->userNameLabel->setText("User Name : " + userName);
+}
+
+

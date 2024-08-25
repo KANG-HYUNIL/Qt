@@ -41,7 +41,7 @@ public:
     void handleClientData();
     void registerClient(const QString& clientId, const QString& userName);
     void updateUserName(const QString& clientId, const QString& newUserName);
-
+    QString queryUserNameFromDatabase(QString clientId);
 
 
 private slots:

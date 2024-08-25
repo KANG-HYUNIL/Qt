@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>483</width>
-    <height>424</height>
+    <width>602</width>
+    <height>460</height>
    </rect>
   </property>
   <property name="font">
@@ -141,6 +141,20 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="userIdLabel">
+      <property name="text">
+       <string>User ID : </string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="userNameLabel">
+      <property name="text">
+       <string>User Name : </string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

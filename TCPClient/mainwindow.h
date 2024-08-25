@@ -25,6 +25,9 @@ private:
     QString clientId;
     QString userName = "";
     void createId(); //create unique ID
+    bool getNameFromServer(QString cliendId); // get Name data from server
+    void setIdLabel();
+    void setNameLabel();
 
 public:
     MainWindow(QWidget *parent = nullptr);

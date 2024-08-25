@@ -179,11 +179,56 @@ void MainWindow::do_socketReadyRead()
             QString newUserName = parts[1].split(':')[1];
             updateUserName(clientId, newUserName);
         }
+        else if (command == "QUERY_NAME") {
+            QString clientId = parts[0].split(':')[1];
+
+
+            QString userName = queryUserNameFromDatabase(clientId);  // 예시 함수
+
+
+            if (!userName.isEmpty()) {
+                QString response = "QUERY_NAME_RESULT:" + clientId + ";NAME:" + userName + "\n";
+                tcpSocket->write(response.toUtf8());
+            }
+
+            else {
+                QString response = "QUERY_NAME_RESULT:" + clientId + ";NAME:null\n";
+                tcpSocket->write(response.toUtf8());
+            }
+        }
     }
+}
+
+//find username for id and return it
+QString MainWindow::queryUserNameFromDatabase(QString clientId) {
+    QSqlQuery query(DB);
+
+
+    query.prepare("SELECT name FROM users WHERE id = :clientId");
+    query.bindValue(":clientId", clientId);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toString();
+    } else {
+        return QString();
+    }
+
 }
 
 void MainWindow::registerClient(const QString& clientId, const QString& userName) {
     QSqlQuery query(DB);
+
+    query.prepare("SELECT COUNT(*) FROM users WHERE id = :clientId");
+    query.bindValue(":clientId", clientId);
+    if (query.exec() && query.next()) {
+        int count = query.value(0).toInt();
+        if (count > 0) {
+            qDebug() << "Client already registered with ID:" << clientId;
+            return;
+        }
+    }
+
+
     query.prepare("INSERT INTO users (id, name) VALUES (:client_id, :user_name)");
     query.bindValue(":client_id", clientId);
     query.bindValue(":user_name", userName);
@@ -201,7 +246,7 @@ void MainWindow::updateUserName(const QString& clientId, const QString& newUserN
         qDebug() << "Failed to update user name:" << query.lastError();
     }
     else {
-        QString updateText = "Update UserName into" + newUserName;
+        QString updateText = "UPDATE_NAME_RESULT:SUCCESS; New User Name :" + newUserName;
 
         //tcpSocket->write("Update UserName into" + newUserName +"\n");
         QByteArray  str=updateText.toUtf8();
