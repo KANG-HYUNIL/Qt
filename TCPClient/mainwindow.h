@@ -50,9 +50,6 @@ private slots:
     void on_actClear_triggered();
 
     void on_btnSend_clicked();
-
-    //void sendId(); //send Id to server
-
     void on_btnChangeName_clicked(); // change user name btn
 
 private:

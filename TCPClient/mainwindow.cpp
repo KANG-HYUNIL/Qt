@@ -136,7 +136,6 @@ void MainWindow::on_btnChangeName_clicked() {
 
     QByteArray changeRequest = "UPDATE_NAME:" + clientId.toUtf8() + ";NAME:" + newUserName.toUtf8() + "\n";
     tcpClient->write(changeRequest);
-
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -166,7 +165,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(tcpClient,&QTcpSocket::stateChanged,this,&MainWindow::do_socketStateChange);
 
-    connect(tcpClient,SIGNAL(readyRead()),   this,SLOT(do_socketReadyRead()));
+    connect(tcpClient,SIGNAL(readyRead()), this,SLOT(do_socketReadyRead()));
 }
 
 MainWindow::~MainWindow()
@@ -189,7 +188,7 @@ void MainWindow::do_connected()
 
     createId();
     QByteArray registrationRequest = "REGISTER:" + clientId.toUtf8() + ";NAME:" + userName.toUtf8() + "\n";
-    ui->textEdit->appendPlainText("[out] "+registrationRequest);
+    //ui->textEdit->appendPlainText("[out] "+registrationRequest);
     tcpClient->write(registrationRequest); // send id and name data to server
 
     setIdLabel();
@@ -208,7 +207,7 @@ void MainWindow::do_socketReadyRead()
 {//readyRead()信号的槽函数
     while(tcpClient->canReadLine()) {
         QString line = tcpClient->readLine().trimmed();
-        ui->textEdit->appendPlainText("[in] "+line);
+        //ui->textEdit->appendPlainText("[in] "+line);
 
         QStringList parts = line.split(';');
         QString command = parts[0].split(':')[0];
@@ -219,11 +218,11 @@ void MainWindow::do_socketReadyRead()
             if (status == "SUCCESS") {
                 QString updatedUserName = parts[1].split(':')[1];
                 this->userName = updatedUserName;
-                ui->textEdit->appendPlainText("**User name updated successfully to " + updatedUserName);
-                setNameLabel();
+                //ui->textEdit->appendPlainText("**User name updated successfully to " + updatedUserName);
+                //setNameLabel();
 
             } else {
-                ui->textEdit->appendPlainText("**Error: Failed to update user name.");
+                //ui->textEdit->appendPlainText("**Error: Failed to update user name.");
             }
         }
     }

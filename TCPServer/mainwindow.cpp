@@ -34,11 +34,34 @@ void MainWindow::openDatabase() {
 void MainWindow::initializeDatabase() {
     QSqlQuery query(DB);
     //execute create table
-    if (!query.exec
-         ("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, name TEXT)"))
-    {
-        qDebug() << "Failed to create table:" << query.lastError();
-    }
+    query.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, name TEXT)");
+    query.exec("CREATE TABLE IF NOT EXIST "
+               "chat_rooms "
+               "(id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "name TEXT NOT NULL, description TEXT, "
+               "is_private BOOLEAN NOT NULL DEFAULT 1, "
+               "created_at DATETIME DEFAULT CURRENT_TIMESTAMP,"
+               "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP);");
+
+    query.exec("CREATE TABLE IF NOT EXIST "
+               "chat_room_members ("
+               "chat_room_id INTEGER,"
+               "user_id TEXT,"
+               "joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,"
+               "PRIMARY KEY (chat_room_id, user_id),"
+               "FOREIGN KEY (chat_room_id) REFERENCES chat_rooms(id),"
+               "FOREIGN KEY (user_id) REFERENCES users(id));");
+
+    query.exec("CREATE TABLE IF NOT EXIST "
+               "chat_messages ("
+               "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+               "chat_room_id INTEGER,"
+               "user_id TEXT,"
+               "message TEXT NOT NULL,"
+               "sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,"
+               "FOREIGN KEY (chat_room_id) REFERENCES chat_rooms(id),"
+               " FOREIGN KEY (user_id) REFERENCES users(id));");
+
 }
 
 void MainWindow::closeDatabase() {
@@ -110,8 +133,8 @@ void MainWindow::do_newConnection()
 
     connect(tcpSocket, SIGNAL(disconnected()),this, SLOT(do_clientDisconnected()));
 
-    connect(tcpSocket,&QTcpSocket::stateChanged,this,&MainWindow::do_socketStateChange);
-    do_socketStateChange(tcpSocket->state());   //执行一次槽函数，显示状态
+    //connect(tcpSocket,&QTcpSocket::stateChanged,this,&MainWindow::do_socketStateChange);
+    //do_socketStateChange(tcpSocket->state());   //执行一次槽函数，显示状态
 
     //소켓에 새로운 데이터가 도착했을 때 slot method 실행
     connect(tcpSocket,SIGNAL(readyRead()),  this,SLOT(do_socketReadyRead()));
@@ -164,7 +187,7 @@ void MainWindow::do_socketReadyRead()
     while(tcpSocket->canReadLine()) {
 
         QString line = tcpSocket->readLine().trimmed();
-        ui->textEdit->appendPlainText("[in] "+line);
+        //ui->textEdit->appendPlainText("[in] "+line);
 
         QStringList parts = line.split(';');
         QString command = parts[0].split(':')[0];
@@ -181,10 +204,7 @@ void MainWindow::do_socketReadyRead()
         }
         else if (command == "QUERY_NAME") {
             QString clientId = parts[0].split(':')[1];
-
-
             QString userName = queryUserNameFromDatabase(clientId);  // 예시 함수
-
 
             if (!userName.isEmpty()) {
                 QString response = "QUERY_NAME_RESULT:" + clientId + ";NAME:" + userName + "\n";
@@ -227,8 +247,6 @@ void MainWindow::registerClient(const QString& clientId, const QString& userName
             return;
         }
     }
-
-
     query.prepare("INSERT INTO users (id, name) VALUES (:client_id, :user_name)");
     query.bindValue(":client_id", clientId);
     query.bindValue(":user_name", userName);
