@@ -38,15 +38,15 @@ private:
     QString getNameFromServer(QString cliendId); // get Name data from server
     void setIdLabel();
     void setNameLabel();
-    void showNewChatRoom(QString& roomId, QString& roomName);
+
 
 private slots:
     void    do_connected();
-    void on_btnSend_clicked();
+    //void on_btnSend_clicked();
     void on_btnChangeName_clicked(); // change user name btn
     void do_socketReadyRead();//读取socket传入的数据
     void on_btnCreateRoom_clicked();
     void    do_socketStateChange(QAbstractSocket::SocketState socketState);
-
+    void on_btnAddFriend_clicked();
 };
 #endif // MAINWINDOW_H

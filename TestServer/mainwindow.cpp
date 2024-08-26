@@ -160,8 +160,24 @@ void MainWindow::do_socketReadyRead()
             }
         }
 
-        else if (1) {
+        else if (command == "GET_ROOM_USERS") {
+            QString roomId = parts[0].split(':')[1]; .
 
+            //
+            QString roomName = getChatRoomName(roomId);
+
+            //
+            QList<QString> userNames = getChatRoomUsers(roomId);
+
+            // response
+            QString response = "ROOM_USERS_RESULT:" + roomId + ";" + roomName;
+            for (const QString &userName : userNames) {
+                response += ";" + userName;
+            }
+            response += "\n";
+
+            ui->textEdit->appendPlainText("[out] " + response);
+            clientSocket->write(response.toUtf8());
         }
 
     }
@@ -186,6 +202,13 @@ QString MainWindow::queryUserNameFromDatabase(QString clientId) {
 //when client connect to server
 void MainWindow::registerClient(const QString& clientId, const QString& userName) {
     QSqlQuery query(DB);
+    QString rUserName;
+    if (userName == "") {
+        rUserName = clientId;
+    }
+    else {
+        rUserName = userName;
+    }
 
     query.prepare("SELECT COUNT(*) FROM users WHERE id = :clientId");
     query.bindValue(":clientId", clientId);
@@ -198,7 +221,7 @@ void MainWindow::registerClient(const QString& clientId, const QString& userName
     }
     query.prepare("INSERT INTO users (id, name) VALUES (:client_id, :user_name)");
     query.bindValue(":client_id", clientId);
-    query.bindValue(":user_name", userName);
+    query.bindValue(":user_name", rUserName);
     if (!query.exec()) {
         qDebug() << "Failed to register client:" << query.lastError();
     }
@@ -270,6 +293,43 @@ bool MainWindow::removeUserFromChatRoom(int roomId, const QString& userId) {
     }
     return true;
 }
+
+//search chat room users from room Id
+QList<QString> MainWindow::getChatRoomUsers(int roomId) {
+    QSqlQuery query(DB);
+    QList<QString> userNames;
+
+    query.prepare("SELECT users.name FROM users "
+                  "JOIN chat_room_members ON users.id = chat_room_members.user_id "
+                  "WHERE chat_room_members.chat_room_id = :room_id");
+    query.bindValue(":room_id", roomId);
+
+    if (query.exec()) {
+        while (query.next()) {
+            QString userName = query.value(0).toString();
+            userNames.append(userName);
+        }
+    } else {
+        qDebug() << "Failed to get users in chat room:" << query.lastError();
+    }
+
+    return userNames;
+}
+
+QString MainWindow::getChatRoomName(const QString& roomId) {
+    QSqlQuery query(DB);
+
+    query.prepare("SELECT name FROM chat_rooms WHERE id = :room_id");
+    query.bindValue(":room_id", roomId);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toString();
+    } else {
+        qDebug() << "Failed to get chat room name:" << query.lastError();
+        return QString();
+    }
+}
+
 
 //active server
 void MainWindow::activeServer() {

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "chatroomui.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -53,14 +54,14 @@ void MainWindow::createId() {
 
 
 
-void MainWindow::on_btnSend_clicked()
-{//“发送数据”按钮, not finished
-    QString  msg;
+// void MainWindow::on_btnSend_clicked()
+// {//“发送数据”按钮, not finished
+//     QString  msg;
 
-    QByteArray  str=msg.toUtf8();
-    str.append('\n');
-    tcpClient->write(str);
-}
+//     QByteArray  str=msg.toUtf8();
+//     str.append('\n');
+//     tcpClient->write(str);
+// }
 
 //change user name and update it to server
 void MainWindow::on_btnChangeName_clicked() {
@@ -113,10 +114,12 @@ void MainWindow::do_socketReadyRead()
                 QString roomId = parts[1].split(':')[1];
                 QString roomName = parts[2].split(':')[1];
 
-                // 채팅방 생성 성공, UI 업데이트
-                showNewChatRoom(roomId, roomName);
+                // get request fot chat room users
+                QByteArray request = "GET_ROOM_USERS:" + roomId.toUtf8() + "\n";
+                tcpClient->write(request);
+
             } else {
-                // 생성 실패 처리
+
                 qDebug() << "Failed to create chat room.";
             }
         }
@@ -147,15 +150,40 @@ void MainWindow::do_socketReadyRead()
             }
         }
 
+        else if (command == "ROOM_USERS_RESULT") {
+            // get roomId & room Name
+            QString roomId = parts[0].split(':')[1];
+            QString roomName = parts[1];
+
+            // get userNames
+            QStringList userNames;
+            for (int i = 2; i < parts.size(); ++i) {
+                userNames.append(parts[i]);
+            }
+
+            // create chatroomui
+            chatroomui *chatRoom = new chatroomui(roomId, roomName, userNames, this);
+            chatRoom->setFixedSize(300, 100); // set fixed size
+
+            // add widget into scrollWidget
+            QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(ui->scrollChatRoom->widget()->layout());
+            if (!layout) {
+                layout = new QVBoxLayout();
+                ui->scrollChatRoom->widget()->setLayout(layout);
+            }
+            layout->addWidget(chatRoom);
+
+        }
+
         else if (1) {
 
         }
+
+
     }
 }
 
-void MainWindow::showNewChatRoom(QString& roomId, QString& roomName) {
 
-}
 
 void MainWindow::on_btnCreateRoom_clicked() {
 
@@ -168,6 +196,12 @@ void MainWindow::on_btnCreateRoom_clicked() {
 
     QByteArray request = "CREATE_ROOM:NAME:" + roomName.toUtf8() + ";" + "\n";
     tcpClient->write(request);
+}
+
+void MainWindow::on_btnAddFriend_clicked() {
+    QString friendId = ui->addFriendId->text();
+
+
 }
 
 void MainWindow::setIdLabel(){

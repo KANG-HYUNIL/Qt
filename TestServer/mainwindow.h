@@ -48,6 +48,9 @@ private:
     int createChatRoom(const QString& creatorId, const QString& roomName);
     bool addUserToChatRoom(int roomId, const QString& userId);
     bool removeUserFromChatRoom(int roomId, const QString& userId);
+    QList<QString> getChatRoomUsers(int roomId);
+    QString getChatRoomName(const QString& roomId);
+
 
 private slots:
     //自定义槽函数
