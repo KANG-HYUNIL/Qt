@@ -110,25 +110,12 @@ background-color: rgba(255, 255, 255,0.7);</string>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="label_6">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;华文楷体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>输入对方昵称</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLabel" name="label_7">
          <property name="styleSheet">
           <string notr="true">font: 15pt &quot;华文楷体&quot;;</string>
          </property>
          <property name="text">
-          <string>开始对话</string>
+          <string>查询昵称</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -145,8 +132,8 @@ background-color: rgba(255, 255, 255,0.7);</string>
          </property>
          <property name="maximumSize">
           <size>
-           <width>125</width>
-           <height>30</height>
+           <width>200</width>
+           <height>50</height>
           </size>
          </property>
          <property name="styleSheet">
