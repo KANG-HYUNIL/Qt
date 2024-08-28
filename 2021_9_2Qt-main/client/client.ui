@@ -26,25 +26,37 @@
    <string>微绿</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <property name="styleSheet">
-    <string notr="true">QWidget#widget
+   <string notr="true">QWidget#widget
 {
 	
 	background-image: url(:/Client/QT/icon/Background_5.jpg);
 
 }</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="minimumSize">
+    <size>
+     <width>554</width>
+     <height>442</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>-10</y>
+      <x>0</x>
+      <y>0</y>
       <width>554</width>
-      <height>399</height>
+      <height>442</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>554</width>
+      <height>442</height>
+     </size>
     </property>
     <widget class="QWidget" name="horizontalLayoutWidget_2">
      <property name="geometry">
@@ -293,13 +305,8 @@ font: 28pt &quot;华文隶书&quot;;</string>
           <height>50</height>
          </size>
         </property>
-        <property name="font">
-         <font>
-          <family>Comic Sans MS</family>
-          <pointsize>12</pointsize>
-          <italic>false</italic>
-          <fontweight></fontweight>
-         </font>
+        <property name="toolTip">
+         <string notr="true"/>
         </property>
         <property name="styleSheet">
          <string notr="true">font: 75 12pt &quot;Comic Sans MS&quot;;

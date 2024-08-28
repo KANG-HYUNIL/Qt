@@ -8,7 +8,7 @@
 #include <QDateTime>
 
 int currentsize;
-
+//User
 server::server(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::server)

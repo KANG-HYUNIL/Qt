@@ -15,7 +15,7 @@ QList <QString> friendiplist;
 QList <QString> friendstatuelist;//1在线
 QList <QString> friendsendmassagelist;
 QList <QString> friendsendfilelist;
-
+//listWidget
 QString hostip = "127.0.0.1";
 int hosthost = 8888;
 
@@ -45,6 +45,12 @@ home::~home()
 
 void home::Createdfriendlist()
 {
+    onlinenum = -1;
+    listnum = -1;
+    sendmassagenum = -1;
+    sendfilenum = -1;
+
+
     if(is_open_chatdialog)
     {
         ui->pushButton_startchat->setEnabled(false);
@@ -240,6 +246,7 @@ void home::on_pushButton_quit_clicked()
 {//退出登录
     this->close();
     user.islogin = false;
+    tcpSocket->disconnectFromHost();
     client *cli = new client();
     cli->show();
 }
