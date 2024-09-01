@@ -76,7 +76,7 @@ private:
     }
 
 public:
-    explicit FlowChart(QWidget *parent = nullptr , Qt::WindowFlags f = 0);
+    explicit FlowChart(QWidget *parent = nullptr , Qt::WindowFlags f = Qt::WindowFlags());
     virtual ~FlowChart()
     {
         //delete[] curPaintChart;

@@ -1,0 +1,189 @@
+QMainWindow#MainWindow{
+    border-image:url(:/images/mainwindow.png);
+}
+
+QMainWindow#ImageBrowser{
+    border-image:url(:/images/background4.png);
+}
+
+QMainWindow#Clock{
+    border-image:url(:/images/background1.png);
+    border-radius: 100px;
+}
+
+QMainWindow#musicplayer,#videoplayer{
+    border-image:url(:/images/background2.png);
+}
+
+QMainWindow#wea_ther{
+    border-image:url(:/images/background5.jpg);
+}
+
+QLineEdit{
+    height:60px;
+    margin:5px 5px;
+    background-color: rgb(255, 255, 255);
+    line-height: 50px;
+    border-radius: 8px;
+    border: 1px solid rgb(222, 226, 230);
+}
+
+QLineEdit:focus{
+    border-radius: 8px;
+    border:3px solid rgb(207, 226, 255);
+
+}
+
+
+QPushButton:hover{
+ border:5px solid rgb(192,192,192);
+ border-color: rgb(192,192,192);
+}
+
+QPushButton:pressed
+{
+    border-color:rgb(0,0,0);
+}
+
+QPushButton#ClockBack,#ImageBack,#backBtn,#ChatBack,#weatherback,#videoBack,#musicBack{
+        border-image: url(:/images/back.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+QPushButton#ClockButton{
+        border-image: url(:/images/Clock.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#ImageBrowserButton{
+        border-image: url(:/images/Picture.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#VideoButton{
+        border-image: url(:/images/Video.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#MusicButton{
+        border-image: url(:/images/Music.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#MapButton{
+        border-image: url(:/images/Map.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#ChatButton{
+        border-image: url(:/images/Message.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+
+QPushButton#wea_therButton{
+        border-image: url(:/images/Weather.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+QPushButton#enlargeBtn{
+        border-image: url(:/images/enlarge.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+
+QPushButton#reduceBtn{
+        border-image: url(:/images/reduce.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#showroadBtn{
+        border-image: url(:/images/showroad.png);
+        border-radius: 2px;
+        width: 50px;
+        height:60px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#searchBtn{
+        border-image: url(:/images/Search.png);
+        border-radius: 2px;
+        width: 50px;
+        height:60px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#previousButton,#lastButton{
+        border-image: url(:/images/Previous.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#nextButton{
+        border-image: url(:/images/Next.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+QPushButton#playButton{
+        border-image: url(:/images/Pause.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}
+
+QPushButton#openButton{
+        border-image: url(:/images/video1.png);
+        border-radius: 2px;
+        width: 50px;
+        height:50px;
+        margin:5px 5px;
+        border-radius: 4px;
+}

@@ -10,7 +10,12 @@ int Chart_Base::chartIDCount = 0;
 QPen Chart_Base::paintDrawPen  = QPen(QColor(150,80,80),pointLineWidth);
 QBrush Chart_Base::paintFillPen  = QBrush(QColor(255,255,255));
 
-Chart_Base::Chart_Base(QWidget *parent, PaintChartType type, bool textType, bool mov, int mpc, int spc):QWidget(parent),magPoint(mpc),sizePoint(spc),movable(mov),chartText(textType)
+
+Chart_Base::Chart_Base(QWidget *parent, PaintChartType type, bool textType, bool mov, int mpc, int spc):QWidget(parent)
+    ,magPoint(mpc)
+    ,sizePoint(spc),
+    movable(mov),
+    chartText(textType)
 {
     chartType = type;
     widgetPosInit();
@@ -19,11 +24,12 @@ Chart_Base::Chart_Base(QWidget *parent, PaintChartType type, bool textType, bool
     pointInit();
     colorInit();
     textInit();
-//    installEventFilter(this);
     setMouseTracking(true);
 }
 
-Chart_Base::Chart_Base( int x, int y, int w, int h, QWidget *parent, PaintChartType type):QWidget(parent),magPoint(4),sizePoint(4)
+Chart_Base::Chart_Base( int x, int y, int w, int h, QWidget *parent, PaintChartType type):QWidget(parent)
+    ,magPoint(4),
+    sizePoint(4)
 {
     chartType = type;
     widgetPosInit(x,y,w,h);
@@ -32,7 +38,6 @@ Chart_Base::Chart_Base( int x, int y, int w, int h, QWidget *parent, PaintChartT
     pointInit();
     colorInit();
     textInit();
-//    installEventFilter(this);
     setMouseTracking(true);
 }
 
@@ -76,7 +81,6 @@ void Chart_Base::widgetPosInit(int x,int y,int w,int h)
 {
     widgetStart.setX(x);
     widgetStart.setY(y);
-    //widgetPos = widgetStart;
     widgetEnd.setX(x+w);
     widgetEnd.setY(y+h);
     updateWidgetPosInof();

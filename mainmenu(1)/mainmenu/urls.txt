@@ -1,0 +1,5 @@
+https://drliveradio.akamaized.net/hls/live/2022411/p1/masterab.m3u8
+http://netradio.radio4.dk/radio4
+http://94.228.133.3:80
+https://tuner.m1.fm/80er.mp3
+http://streams.rsh.de/rsh-live/mp3-128/streams.rsh.de

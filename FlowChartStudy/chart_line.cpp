@@ -1,4 +1,6 @@
 #include "chart_line.h"
+
+
 double Chart_Line::extendWidth45 = 0;
 double Chart_Line::arrayLength45 = 0;
 double Chart_Line::arrayLength75 = 0;
@@ -7,156 +9,7 @@ double Chart_Line::arrayLength15 = 0;
 double Chart_Line::arrayWidth15 = 0;
 
 
-#if (OPTIMIZATION == 1)
-void Chart_Line::angle0(QPainterPath &linePath, int &sx,int &sy, int &ex, int &ey)
-{
-    ex = endPos.rx();
-    ey = endPos.ry() - extendWidth;
-    if(sy>ey)
-    {
-        linePath.lineTo(sx,ey);
-        linePath.lineTo(ex,ey);
-        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-        graphPath->addRect(sx,ey - containsWidth1_2,ex-sx,containsWidth);
-    }else{
-        linePath.lineTo(ex,sy);
-        linePath.lineTo(ex,ey);
-        graphPath->addRect(sx,sy + containsWidth1_2,ex - sx,-containsWidth);
-        graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey - sy);
-    }
-}
-void Chart_Line::anglePos90(QPainterPath &linePath, int &sx,int &sy, int &ex, int &ey)
-{
-    int midx,midy;
-    ex = endPos.rx();
-    ey = endPos.ry() + extendWidth;
-    if(sy>ey)
-    {
-        if(sx>ex)
-        {
-            linePath.lineTo(ex,sy);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
-            graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-        }else{
-            midy = (sy+ey)>>1;
-            linePath.lineTo(sx,midy);
-            linePath.lineTo(ex,midy);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-            graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
-            graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-        }
-    }else{
-        if(sx>ex)
-        {
-            midx = (sx+ex)>>1;
-            linePath.lineTo(midx,sy);
-            linePath.lineTo(midx,ey);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-            graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-            graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-        }else{
-            linePath.lineTo(sx,ey);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-            graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
-        }
-    }
-}
-void Chart_Line::angleNeg90(QPainterPath &linePath, int &sx,int &sy, int &ex, int &ey)
-{
-    int midx,midy;
-    ex = endPos.rx();
-    ey = endPos.ry() - extendWidth;
-    if(sy>ey)
-    {
-        if(sx>ex)
-        {
-            midx = (sx+ex)>>1;
-            linePath.lineTo(midx,sy);
-            linePath.lineTo(midx,ey);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-            graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-            graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-        }else{
-            linePath.lineTo(sx,ey);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-            graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
-        }
-    }else{
-        if(sx>ex)
-        {
-            linePath.lineTo(sx,ey);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-            graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-        }else{
-            midy = (sy+ey)>>1;
-            linePath.lineTo(sx,midy);
-            linePath.lineTo(ex,midy);
-            linePath.lineTo(ex,ey);
-            graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-            graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
-            graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-        }
-    }
-}
-void Chart_Line::angle1EastWest(QPainterPath &linePath, int &sx,int &sy, int &ex, int &ey)
-{
-    int midx,midy;
-    ex = endPos.rx() + extendWidth;
-    ey = endPos.ry();
-    if(sx>ex)
-    {
-        midx = (sx+ex)>>1;
-        linePath.lineTo(midx,sy);
-        linePath.lineTo(midx,ey);
-        linePath.lineTo(ex,ey);
-        graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
-        graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
-        graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
-    }else{
-        midy = (sy+ey)>>1;
-        linePath.lineTo(sx,midy);
-        linePath.lineTo(ex,midy);
-        linePath.lineTo(ex,ey);
-        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-        graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
-        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-    }
-}
-void Chart_Line::angle1SouthNorth(QPainterPath &linePath, int &sx,int &sy, int &ex, int &ey)
-{
-    int midx,midy;
-    ex = endPos.rx();
-    ey = endPos.ry() - extendWidth;
-    if(sy>ey)
-    {
-        midx = (sx+ex)>>1;
-        linePath.lineTo(midx,sy);
-        linePath.lineTo(midx,ey);
-        linePath.lineTo(ex,ey);
-        graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
-        graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
-        graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
-    }else{
-        midy = (sy+ey)>>1;
-        linePath.lineTo(sx,midy);
-        linePath.lineTo(ex,midy);
-        linePath.lineTo(ex,ey);
-        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-        graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
-        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-    }
-}
-
-#endif
-
-//method checks direction and type of arrow, draw appropriate arrow
+//draw methods
 void Chart_Line::drawLineHead(const ORIENTION o,const LINE_HEAD_TYPE lht,const int x,const int y,QPainter & p,QPainterPath &linePath, QPainterPath &graphPath)
 {
 
@@ -271,8 +124,8 @@ void Chart_Line::drawLineHead(const ORIENTION o,const LINE_HEAD_TYPE lht,const i
 
             p.fillPath(tmp,p.pen().brush());
             p.drawPath(tmp);
-            linePath.moveTo(x,y);
         }break;
+            linePath.moveTo(x,y);
         case LINE_HEAD_TYPE::ARROW0:{
             linePath.lineTo(x,y);
         }break;
@@ -513,17 +366,17 @@ void Chart_Line::drawLineHead(const ORIENTION o,const LINE_HEAD_TYPE lht,const i
         }
     }break;
     }
-}
+
+}//drawLineHead
 
 
-//add thickness to drawed line
+
 void Chart_Line::drawStraightLine(int sx, int sy, int ex, int ey,QPainterPath &linePath, QPainterPath &graphPath)
 {
     linePath.moveTo(sx,sy);
     linePath.lineTo(ex,ey);
     if(sx<ex && sy<ey)
     {
-        //다각형을 정의하는 코드, 여러 개의 점들로 다각형의 꼭짓점들 정의
         QPolygonF tmp;
         tmp<<QPointF(sx,sy)<<QPointF(sx+containsWidth1_2,sy)<<QPointF(ex,ey-containsWidth1_2)<<QPointF(ex,ey)<<QPointF(ex - containsWidth1_2,ey)<<QPointF(sx,sy+containsWidth1_2)<<QPointF(sx,sy);
         graphPath.addPolygon(tmp);
@@ -543,342 +396,315 @@ void Chart_Line::drawStraightLine(int sx, int sy, int ex, int ey,QPainterPath &l
         tmp<<QPointF(ex,ey)<<QPointF(ex+containsWidth1_2,ey)<<QPointF(sx,sy+containsWidth1_2)<<QPointF(sx,sy)<<QPointF(sx - containsWidth1_2,sy)<<QPointF(ex,ey-containsWidth1_2)<<QPointF(ex,ey);
         graphPath.addPolygon(tmp);
     }
-}
+
+}//drawStraightLine
 
 
-
-void Chart_Line::paintChart(QPainter & p)
+void Chart_Line::paintChart(QPainter &p)
 {
     QPen tmp = p.pen();
     p.setPen(paintChartDrawPen);
 
-    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
     int midx,midy;
     int sx,sy,ex,ey;
     QPainterPath linePath;
 
     if(graphPath) delete graphPath;
     graphPath = new QPainterPath;
-#if (OPTIMIZATION == 1)
-    switch(startDirect)
-    {
-    case ORIENTION::NORTH:{
-        sx = startPos.rx();
-        sy = startPos.ry() - extendWidth;
-        linePath.moveTo(startPos.rx(),startPos.ry());
-        linePath.lineTo(sx,sy);
-        graphPath->addRect(sx - containsWidth1_2,startPos.ry(),containsWidth,-extendWidth);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            angle0(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,extendWidth);
-        }break;
-        case ORIENTION::EAST:{
-            angleNeg90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,-extendWidth,containsWidth);
-        }break;
-        case ORIENTION::SOUTH:{
-            angle1SouthNorth(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,-extendWidth);
-        }break;
-        case ORIENTION::WEST:{
-            anglePos90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,extendWidth,containsWidth);
-        }
-        }
-        linePath.lineTo(endPos.rx(),endPos.ry());
-    }break;
-    case ORIENTION::EAST:{
-        sx = startPos.rx() + extendWidth;
-        sy = startPos.ry();
-        linePath.moveTo(startPos.rx(),startPos.ry());
-        linePath.lineTo(sx,sy);
-        graphPath->addRect(startPos.rx(),sy - containsWidth1_2,extendWidth,containsWidth);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            anglePos90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,extendWidth);
-        }break;
-        case ORIENTION::EAST:{
-            angle0(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,-extendWidth,containsWidth);
-        }break;
-        case ORIENTION::SOUTH:{
-            angleNeg90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,-extendWidth);
-        }break;
-        case ORIENTION::WEST:{
-            angle1EastWest(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,extendWidth,containsWidth);
-        }
-        }
-        linePath.lineTo(endPos.rx(),endPos.ry());
-    }break;
-    case ORIENTION::SOUTH:{
-        sx = startPos.rx();
-        sy = startPos.ry() + extendWidth;
-        linePath.moveTo(startPos.rx(),startPos.ry());
-        linePath.lineTo(sx,sy);
-        graphPath->addRect(startPos.rx() - extendWidth,startPos.ry(),containsWidth,extendWidth);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            angle1SouthNorth(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,extendWidth);
-        }break;
-        case ORIENTION::EAST:{
-            anglePos90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,-extendWidth,containsWidth);
-        }break;
-        case ORIENTION::SOUTH:{
-            angle0(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,-extendWidth);
 
-        }break;
-        case ORIENTION::WEST:{
-            angleNeg90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,extendWidth,containsWidth);
-        }
-        }
-        linePath.lineTo(endPos.rx(),endPos.ry());
-    }break;
-    case ORIENTION::WEST:{
-        sx = startPos.rx() - extendWidth;
-        sy = startPos.ry();
-        linePath.moveTo(startPos.rx(),startPos.ry());
-        linePath.lineTo(sx,sy);
-        graphPath->addRect(startPos.rx(),startPos.ry() - containsWidth1_2,-extendWidth,containsWidth);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            anglePos90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,extendWidth);
-        }break;
-        case ORIENTION::EAST:{
-            angle1EastWest(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,-extendWidth,containsWidth);
-        }break;
-        case ORIENTION::SOUTH:{
-            anglePos90(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex - containsWidth1_2,ey,containsWidth,-extendWidth);
-        }break;
-        case ORIENTION::WEST:{
-            angle0(linePath,sx,sy,ex,ey);
-            graphPath->addRect(ex,ey - containsWidth1_2,extendWidth,containsWidth);
-        }
-        }
-        linePath.lineTo(endPos.rx(),endPos.ry());
-    }break;
-    default:
-    {
-    }
-    }
-#else
+    //이 아래에 분기별로 추가되어야 함
+
     switch(startDirect)
     {
-    case ORIENTION::NORTH:{
-        sx = startPos.rx();
-        sy = startPos.ry() - extendWidth;
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        linePath.moveTo(sx,sy);
-        switch(endDirect)
-        {
+
         case ORIENTION::NORTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() - extendWidth;
-            if(sy>ey)
+            sx = startPos.rx();
+            sy = startPos.ry() - extendWidth;
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            linePath.moveTo(sx,sy);
+            switch(endDirect)
             {
-                linePath.lineTo(sx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(sx,ey - containsWidth1_2,ex-sx,containsWidth);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                linePath.lineTo(ex,sy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy + containsWidth1_2,ex - sx,-containsWidth);
-                graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey - sy);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+            case ORIENTION::NORTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() - extendWidth;
+                if(sy>ey)
+                {
+                    linePath.lineTo(sx,ey);
+                    linePath.lineTo(ex,ey);
+                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                    graphPath->addRect(sx,ey - containsWidth1_2,ex-sx,containsWidth);
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                }else{
+                    linePath.lineTo(ex,sy);
+                    linePath.lineTo(ex,ey);
+                    graphPath->addRect(sx,sy + containsWidth1_2,ex - sx,-containsWidth);
+                    graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey - sy);
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:{
+                ex = endPos.rx() + extendWidth;
+                ey = endPos.ry();
+                if(sy>ey)
+                {
+                    if(sx>ex)
+                    {
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+
+                    }else{
+                        midy = (sy+ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }else{
+                    if(sx>ex)
+                    {
+                        midx = (sx + ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1)  - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() + extendWidth;
+                if(sy>ey)
+                {
+                    midy = (sy+ey)>>1;
+                    linePath.lineTo(sx,midy);
+                    linePath.lineTo(ex,midy);
+                    linePath.lineTo(ex,ey);
+                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                    graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
+                    graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                }else{
+                    midx = (sx + ex)>>1;
+                    linePath.lineTo(midx,sy);
+                    linePath.lineTo(midx,ey);
+                    linePath.lineTo(ex,ey);
+                    graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
+                    graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
+                    graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
+                    //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:{
+                ex = endPos.rx() - extendWidth;
+                ey = endPos.ry();
+                if(sy>ey)
+                {
+                    if(sx>ex)
+                    {
+                        midy = (sy+ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy - containsWidth1_2,ex - sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey - midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+
+                    }else{
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }else{
+                    if(sx>ex)
+                    {
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy - containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey-sy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        midx = (sx+ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy - containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey - containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:{
+                drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:{
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            default:
+            {
             }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }
+            //linePath.lineTo(endPos.rx(),endPos.ry());
         }break;
+
         case ORIENTION::EAST:{
-            ex = endPos.rx() + extendWidth;
-            ey = endPos.ry();
-            if(sy>ey)
+
+            sx = startPos.rx() + extendWidth;
+            sy = startPos.ry();
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            linePath.moveTo(sx,sy);
+
+            switch(endDirect)
             {
+            case ORIENTION::NORTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() - extendWidth;
+                if(sy>ey)
+                {
+                    if(sx>ex)
+                    {
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        linePath.lineTo(endPos.rx(),endPos.ry());
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        midx = (sx + ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        linePath.lineTo(endPos.rx(),endPos.ry());
+                        graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }else{
+                    if(sx>ex)
+                    {
+                        midy = (sy + ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:{
+                ex = endPos.rx() + extendWidth;
+                ey = endPos.ry();
                 if(sx>ex)
                 {
                     linePath.lineTo(sx,ey);
                     linePath.lineTo(ex,ey);
                     graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
                     graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-
-                }else{
-                    midy = (sy+ey)>>1;
-                    linePath.lineTo(sx,midy);
-                    linePath.lineTo(ex,midy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                    graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }else{
-                if(sx>ex)
-                {
-                    midx = (sx + ex)>>1;
-                    linePath.lineTo(midx,sy);
-                    linePath.lineTo(midx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1)  - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry(sx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }else{
                     linePath.lineTo(ex,sy);
                     linePath.lineTo(ex,ey);
                     graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
                     graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry(ex - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() + extendWidth;
-            if(sy>ey)
-            {
-                midy = (sy+ey)>>1;
-                linePath.lineTo(sx,midy);
-                linePath.lineTo(ex,midy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
-                graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                midx = (sx + ex)>>1;
-                linePath.lineTo(midx,sy);
-                linePath.lineTo(midx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
-                graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
-                chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:{
-            ex = endPos.rx() - extendWidth;
-            ey = endPos.ry();
-            if(sy>ey)
-            {
-                if(sx>ex)
-                {
-                    midy = (sy+ey)>>1;
-                    linePath.lineTo(sx,midy);
-                    linePath.lineTo(ex,midy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                    graphPath->addRect(sx,midy - containsWidth1_2,ex - sx,containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey - midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
 
-                }else{
-                    linePath.lineTo(sx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }else{
-                if(sx>ex)
+            }break;
+            case ORIENTION::SOUTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() + extendWidth;
+                if(sy>ey)
                 {
-                    linePath.lineTo(ex,sy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy - containsWidth1_2,ex-sx,containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey-sy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    if(sx>ex)
+                    {
+                        midy = (sy+ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy + containsWidth1_2,ex - sx,-containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey - sy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
                 }else{
-                    midx = (sx+ex)>>1;
-                    linePath.lineTo(midx,sy);
-                    linePath.lineTo(midx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy - containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey - containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    if(sx>ex)
+                    {
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        midx = (sx + ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
                 }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:{
-            drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:{
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        default:
-        {
-        }
-        }
-        //linePath.lineTo(endPos.rx(),endPos.ry());
-    }break;
-    case ORIENTION::EAST:{
-
-        sx = startPos.rx() + extendWidth;
-        sy = startPos.ry();
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        linePath.moveTo(sx,sy);
-
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() - extendWidth;
-            if(sy>ey)
-            {
-                if(sx>ex)
-                {
-                    linePath.lineTo(sx,ey);
-                    linePath.lineTo(ex,ey);
-                    linePath.lineTo(endPos.rx(),endPos.ry());
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }else{
-                    midx = (sx + ex)>>1;
-                    linePath.lineTo(midx,sy);
-                    linePath.lineTo(midx,ey);
-                    linePath.lineTo(ex,ey);
-                    linePath.lineTo(endPos.rx(),endPos.ry());
-                    graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }else{
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:{
+                ex = endPos.rx() - extendWidth;
+                ey = endPos.ry();
                 if(sx>ex)
                 {
                     midy = (sy + ey)>>1;
@@ -886,198 +712,72 @@ void Chart_Line::paintChart(QPainter & p)
                     linePath.lineTo(ex,midy);
                     linePath.lineTo(ex,ey);
                     graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                    graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }else{
-                    linePath.lineTo(ex,sy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
-                    graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:{
-            ex = endPos.rx() + extendWidth;
-            ey = endPos.ry();
-            if(sx>ex)
-            {
-                linePath.lineTo(sx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-                chartText.textType1->setGeometry(sx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                linePath.lineTo(ex,sy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
-                graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-                chartText.textType1->setGeometry(ex - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-
-        }break;
-        case ORIENTION::SOUTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() + extendWidth;
-            if(sy>ey)
-            {
-                if(sx>ex)
-                {
-                    midy = (sy+ey)>>1;
-                    linePath.lineTo(sx,midy);
-                    linePath.lineTo(ex,midy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
                     graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
                     graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }else{
-                    linePath.lineTo(ex,sy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy + containsWidth1_2,ex - sx,-containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey - sy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }else{
-                if(sx>ex)
-                {
-                    linePath.lineTo(sx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }else{
                     midx = (sx + ex)>>1;
                     linePath.lineTo(midx,sy);
                     linePath.lineTo(midx,ey);
                     linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
+                    graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
+                    graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
+                    //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:{
-            ex = endPos.rx() - extendWidth;
-            ey = endPos.ry();
-            if(sx>ex)
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:{
+                drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
             {
-                midy = (sy + ey)>>1;
-                linePath.lineTo(sx,midy);
-                linePath.lineTo(ex,midy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
-                graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                midx = (sx + ex)>>1;
-                linePath.lineTo(midx,sy);
-                linePath.lineTo(midx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
-                graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
-                chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:{
-            drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:{
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        default:
-        {
-        }
-        }
-        //linePath.lineTo(endPos.rx(),endPos.ry());
-    }break;
-    case ORIENTION::SOUTH:
-    {
-        sx = startPos.rx();
-        sy = startPos.ry() + extendWidth;
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        linePath.moveTo(sx,sy);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() - extendWidth;
-            if(sy>ey)
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
             {
-                midx = (sx+ex)>>1;
-                linePath.lineTo(midx,sy);
-                linePath.lineTo(midx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
-                graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
-                chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                midy = (sy+ey)>>1;
-                linePath.lineTo(sx,midy);
-                linePath.lineTo(ex,midy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
-                graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:{
-            ex = endPos.rx() + extendWidth;
-            ey = endPos.ry();
-            if(sy>ey)
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:{
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
             {
-                if(sx>ex)
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            default:
+            {
+            }
+            }
+            //linePath.lineTo(endPos.rx(),endPos.ry());
+        }break;
+
+
+        case ORIENTION::SOUTH:
+        {
+            sx = startPos.rx();
+            sy = startPos.ry() + extendWidth;
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            linePath.moveTo(sx,sy);
+            switch(endDirect)
+            {
+            case ORIENTION::NORTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() - extendWidth;
+                if(sy>ey)
                 {
                     midx = (sx+ex)>>1;
                     linePath.lineTo(midx,sy);
                     linePath.lineTo(midx,ey);
                     linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }else{
-                    linePath.lineTo(ex,sy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy + containsWidth1_2,ex - sx,-containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey - sy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-
-            }else{
-                if(sx>ex){
-                    linePath.lineTo(sx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
+                    graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
+                    graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
+                    //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }else{
                     midy = (sy+ey)>>1;
                     linePath.lineTo(sx,midy);
@@ -1086,139 +786,211 @@ void Chart_Line::paintChart(QPainter & p)
                     graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
                     graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
                     graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() + extendWidth;
-            if(sy>ey)
-            {
-                linePath.lineTo(ex,sy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
-                graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                linePath.lineTo(sx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:{
-            ex = endPos.rx() - extendWidth;
-            ey = endPos.ry();
-            if(sy>ey)
-            {
-                if(sx>ex)
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:{
+                ex = endPos.rx() + extendWidth;
+                ey = endPos.ry();
+                if(sy>ey)
+                {
+                    if(sx>ex)
+                    {
+                        midx = (sx+ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy + containsWidth1_2,ex - sx,-containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,sy,containsWidth,ey - sy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+
+                }else{
+                    if(sx>ex){
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        midy = (sy+ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() + extendWidth;
+                if(sy>ey)
                 {
                     linePath.lineTo(ex,sy);
                     linePath.lineTo(ex,ey);
                     graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
                     graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }else{
-                    midx = (sx+ex)>>1;
-                    linePath.lineTo(midx,sy);
-                    linePath.lineTo(midx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }else{
-                if(sx>ex)
-                {
-                    midy = (sy+ey)>>1;
-                    linePath.lineTo(sx,midy);
-                    linePath.lineTo(ex,midy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                    graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }else{
                     linePath.lineTo(sx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:{
-            drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:{
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        default:
-        {
-        }
-        }
-        //linePath.lineTo(endPos.rx(),endPos.ry());
-    }break;
-    case ORIENTION::WEST:
-    {
-        sx = startPos.rx() - extendWidth;
-        sy = startPos.ry();
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        linePath.moveTo(sx,sy);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() - extendWidth;
-            if(sy>ey)
-            {
-                if(sx>ex)
-                {
-                    midx = (sx+ex)>>1;
-                    linePath.lineTo(midx,sy);
-                    linePath.lineTo(midx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }else{
-                    linePath.lineTo(sx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }else{
-                if(sx>ex)
-                {
-                    linePath.lineTo(ex,sy);
                     linePath.lineTo(ex,ey);
                     graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
                     graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:{
+                ex = endPos.rx() - extendWidth;
+                ey = endPos.ry();
+                if(sy>ey)
+                {
+                    if(sx>ex)
+                    {
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        midx = (sx+ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }else{
+                    if(sx>ex)
+                    {
+                        midy = (sy+ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:{
+                drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:{
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            default:
+            {
+            }
+            }
+
+        }break;
+
+
+
+
+        case ORIENTION::WEST:
+        {
+            sx = startPos.rx() - extendWidth;
+            sy = startPos.ry();
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            linePath.moveTo(sx,sy);
+            switch(endDirect)
+            {
+            case ORIENTION::NORTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() - extendWidth;
+                if(sy>ey)
+                {
+                    if(sx>ex)
+                    {
+                        midx = (sx+ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }else{
+                    if(sx>ex)
+                    {
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        midy = (sy+ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:{
+                ex = endPos.rx() + extendWidth;
+                ey = endPos.ry();
+                if(sx>ex)
+                {
+                    midx = (sx+ex)>>1;
+                    linePath.lineTo(midx,sy);
+                    linePath.lineTo(midx,ey);
+                    linePath.lineTo(ex,ey);
+                    graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
+                    graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
+                    graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
+                    //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }else{
                     midy = (sy+ey)>>1;
                     linePath.lineTo(sx,midy);
@@ -1227,413 +999,389 @@ void Chart_Line::paintChart(QPainter & p)
                     graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
                     graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
                     graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:{
-            ex = endPos.rx() + extendWidth;
-            ey = endPos.ry();
-            if(sx>ex)
-            {
-                midx = (sx+ex)>>1;
-                linePath.lineTo(midx,sy);
-                linePath.lineTo(midx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy - containsWidth1_2,midx - sx,containsWidth);
-                graphPath->addRect(midx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(midx,ey - containsWidth1_2,ex - midx,containsWidth);
-                chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                midy = (sy+ey)>>1;
-                linePath.lineTo(sx,midy);
-                linePath.lineTo(ex,midy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                graphPath->addRect(sx,midy-containsWidth1_2,ex-sx,containsWidth);
-                graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:{
-            ex = endPos.rx();
-            ey = endPos.ry() + extendWidth;
-            if(sy>ey)
-            {
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:{
+                ex = endPos.rx();
+                ey = endPos.ry() + extendWidth;
+                if(sy>ey)
+                {
+                    if(sx>ex)
+                    {
+                        linePath.lineTo(ex,sy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        midy = (sy+ey)>>1;
+                        linePath.lineTo(sx,midy);
+                        linePath.lineTo(ex,midy);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
+                        graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
+                        graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }else{
+                    if(sx>ex)
+                    {
+                        midx = (sx+ex)>>1;
+                        linePath.lineTo(midx,sy);
+                        linePath.lineTo(midx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
+                        graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
+                        graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
+                        //chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }else{
+                        linePath.lineTo(sx,ey);
+                        linePath.lineTo(ex,ey);
+                        graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
+                        graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
+                        //chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    }
+                }
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:{
+                ex = endPos.rx() - extendWidth;
+                ey = endPos.ry();
                 if(sx>ex)
                 {
                     linePath.lineTo(ex,sy);
                     linePath.lineTo(ex,ey);
                     graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
                     graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),sy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }else{
-                    midy = (sy+ey)>>1;
-                    linePath.lineTo(sx,midy);
-                    linePath.lineTo(ex,midy);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,midy - sy);
-                    graphPath->addRect(sx,midy - containsWidth1_2,ex-sx,containsWidth);
-                    graphPath->addRect(ex - containsWidth1_2,midy,containsWidth,ey-midy);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),midy - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-                }
-            }else{
-                if(sx>ex)
-                {
-                    midx = (sx+ex)>>1;
-                    linePath.lineTo(midx,sy);
-                    linePath.lineTo(midx,ey);
-                    linePath.lineTo(ex,ey);
-                    graphPath->addRect(sx,sy-containsWidth1_2,midx-sx,containsWidth);
-                    graphPath->addRect(midx-containsWidth1_2,sy,containsWidth,ey-sy);
-                    graphPath->addRect(midx,ey-containsWidth1_2,ex-midx,containsWidth);
-                    chartText.textType1->setGeometry(midx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    //chartText.textType1->setGeometry(ex - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }else{
                     linePath.lineTo(sx,ey);
                     linePath.lineTo(ex,ey);
                     graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx,containsWidth);
-                    chartText.textType1->setGeometry((width()>>1) - (chartText.textType1->width()>>1),ey - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                    graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
+                    //chartText.textType1->setGeometry(sx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
                 }
-            }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:{
-            ex = endPos.rx() - extendWidth;
-            ey = endPos.ry();
-            if(sx>ex)
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:{
+                drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
             {
-                linePath.lineTo(ex,sy);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx,sy-containsWidth1_2,ex-sx,containsWidth);
-                graphPath->addRect(ex-containsWidth1_2,sy,containsWidth,ey-sy);
-                chartText.textType1->setGeometry(ex - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
-            }else{
-                linePath.lineTo(sx,ey);
-                linePath.lineTo(ex,ey);
-                graphPath->addRect(sx - containsWidth1_2,sy,containsWidth,ey - sy);
-                graphPath->addRect(sx,ey - containsWidth1_2,ex - sx, containsWidth);
-                chartText.textType1->setGeometry(sx - (chartText.textType1->width()>>1),(height()>>1) - (chartText.textType1->height()>>1),chartText.textType1->width(),chartText.textType1->height());
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:{
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            default:
+            {
+
             }
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }
         }break;
-        case ORIENTION::ENDPOINT:{
-            drawStraightLine(sx,sy,endPos.rx(),endPos.ry(),linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:{
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        default:
-        {
 
-        }
-        }
-    }break;
-    case ORIENTION::STARTPOINT:{
-        sx = startPos.rx();
-        sy = startPos.ry();
-        ex = endPos.rx();
-        ey = endPos.ry();
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:{
-            drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:{
-            drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:{
-            drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:{
-            drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:{
-            drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
-        }break;
-        };
-    }break;
-    case ORIENTION::NORTHEAST:{
-        sx = startPos.rx() + extendWidth45;
-        sy = startPos.ry() - extendWidth45;
-        ex = endPos.rx();
-        ey = endPos.ry();
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        linePath.moveTo(sx,sy);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:{
-            drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:{
-            drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:{
-            drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:{
-            drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:{
-            drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:{
-            drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        };
-    }break;
-    case ORIENTION::NORTHWEST:{
-        sx = startPos.rx() - extendWidth45;
-        sy = startPos.ry() - extendWidth45;
-        ex = endPos.rx();
-        ey = endPos.ry();
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:
-        {
-            drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:
-        {
-            drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:
-        {
-            drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        };
-    }break;
-    case ORIENTION::SOUTHWEST:{
-        sx = startPos.rx() - extendWidth45;
-        sy = startPos.ry() + extendWidth45;
-        ex = endPos.rx();
-        ey = endPos.ry();
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:
-        {
-            drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:
-        {
-            drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:
-        {
-            drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        };
-    }break;
-    case ORIENTION::SOUTHEAST:{
-        sx = startPos.rx() + extendWidth45;
-        sy = startPos.ry() + extendWidth45;
-        ex = endPos.rx();
-        ey = endPos.ry();
-        drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
-        switch(endDirect)
-        {
-        case ORIENTION::NORTH:
-        {
-            drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::EAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTH:
-        {
-            drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::WEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::ENDPOINT:
-        {
-            drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHEAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::NORTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHEAST:
-        {
-            drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        case ORIENTION::SOUTHWEST:
-        {
-            drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
-            drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
-        }break;
-        };
-    }break;
-    default:{
-    }
-    }
 
-#endif
+
+        case ORIENTION::STARTPOINT:{
+            sx = startPos.rx();
+            sy = startPos.ry();
+            ex = endPos.rx();
+            ey = endPos.ry();
+            switch(endDirect)
+            {
+            case ORIENTION::NORTH:{
+                drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:{
+                drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:{
+                drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:{
+                drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:{
+                drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:{
+                drawStraightLine(sx,sy,endPos.rx() + extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,endPos.rx() - extendWidth45,endPos.ry() + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,endPos.rx(),endPos.ry(),p,linePath,*graphPath);
+            }break;
+            };
+        }break;
+
+
+        case ORIENTION::NORTHEAST:{
+            sx = startPos.rx() + extendWidth45;
+            sy = startPos.ry() - extendWidth45;
+            ex = endPos.rx();
+            ey = endPos.ry();
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            linePath.moveTo(sx,sy);
+            switch(endDirect)
+            {
+            case ORIENTION::NORTH:{
+                drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:{
+                drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:{
+                drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:{
+                drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:{
+                drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:{
+                drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            };
+        }break;
+
+
+        case ORIENTION::NORTHWEST:{
+            sx = startPos.rx() - extendWidth45;
+            sy = startPos.ry() - extendWidth45;
+            ex = endPos.rx();
+            ey = endPos.ry();
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            switch(endDirect)
+            {
+            case ORIENTION::NORTH:
+            {
+                drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:
+            {
+                drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:
+            {
+                drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            };
+        }break;
+
+        case ORIENTION::SOUTHWEST:{
+            sx = startPos.rx() - extendWidth45;
+            sy = startPos.ry() + extendWidth45;
+            ex = endPos.rx();
+            ey = endPos.ry();
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            switch(endDirect)
+            {
+            case ORIENTION::NORTH:
+            {
+                drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:
+            {
+                drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:
+            {
+                drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            };
+        }break;
+
+
+        case ORIENTION::SOUTHEAST:{
+            sx = startPos.rx() + extendWidth45;
+            sy = startPos.ry() + extendWidth45;
+            ex = endPos.rx();
+            ey = endPos.ry();
+            drawLineHead(startDirect,startLineHeadType,startPos.rx(),startPos.ry(),p,linePath,*graphPath);
+            switch(endDirect)
+            {
+            case ORIENTION::NORTH:
+            {
+                drawStraightLine(sx,sy,ex,ey - extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::EAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTH:
+            {
+                drawStraightLine(sx,sy,ex,ey + extendWidth,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::WEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth,ey,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::ENDPOINT:
+            {
+                drawStraightLine(sx,sy,ex,ey,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHEAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::NORTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey - extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHEAST:
+            {
+                drawStraightLine(sx,sy,ex + extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            case ORIENTION::SOUTHWEST:
+            {
+                drawStraightLine(sx,sy,ex - extendWidth45,ey + extendWidth45,linePath,*graphPath);
+                drawLineHead(endDirect,endLineHeadType,ex,ey,p,linePath,*graphPath);
+            }break;
+            };
+        }break;
+
+
+        default:{
+        }
+
+
+
+    }
 
 
     p.drawPath(linePath);
     p.setPen(QPen(QColor(0,0,0,0),0));
     graphPath->setFillRule(Qt::WindingFill);
     p.drawPath(*graphPath);
-
     p.setPen(tmp);
-}
 
-
-void Chart_Line::updateMagPointInfo()
-{
-    //    magPoint.i_point[0]->setX(startPos.rx());
-    //    magPoint.i_point[0]->setY(startPos.ry());
-    //    magPoint.i_point[0]->setRotate(ORIENTION::STARTPOINT);
-    //    magPoint.i_point[1]->setX(endPos.rx());
-    //    magPoint.i_point[1]->setY(endPos.ry());
-    //    magPoint.i_point[1]->setRotate(ORIENTION::ENDPOINT);
 
 }
 
 
-
+//update infos
 void Chart_Line::updateSizePointInfo()
 {
     if(widgetStart.rx() > widgetEnd.rx())
@@ -1664,47 +1412,16 @@ void Chart_Line::updateSizePointInfo()
     sizePoint.i_point[1]->setRotate(ORIENTION::ENDPOINT);
 }
 
-
-void Chart_Line::specialWidgetUpdate(int &x,int &y, int &w, int &h)
-{
-    x -= extendWidth;
-    y -= extendWidth;
-    w += extendWidth + extendWidth;
-    h += extendWidth + extendWidth;
-}
-
-
-void Chart_Line::specialPaintUpdate(QPoint &s, QPoint &e)
-{
-    s.setX(s.rx() + extendWidth);
-    s.setY(s.ry() + extendWidth);
-    e.setX(e.rx() + extendWidth);
-    e.setY(e.ry() + extendWidth);
-}
-
-//event
-
+//operator
 QDataStream &operator<<(QDataStream &fout, const Chart_Line &cl)
 {
     fout<<cl.startPos<<cl.endPos;
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.startDirect),sizeof(ORIENTION));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.endDirect),sizeof(ORIENTION));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.startMagIndex),sizeof(int));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.endMagIndex),sizeof(int));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE));
-    if(cl.startChartMag)
-        fout.writeRawData(reinterpret_cast<const char*>(&cl.startChartMag->getID()),sizeof(int));
-    else{
-        int i = -1;
-        fout.writeRawData(reinterpret_cast<const char*>(&i),sizeof(int));
-    }
-    if(cl.endChartMag)
-        fout.writeRawData(reinterpret_cast<const char*>(&cl.endChartMag->getID()),sizeof(int));
-    else{
-        int i = -1;
-        fout.writeRawData(reinterpret_cast<const char*>(&i),sizeof(int));
-    }
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.startDirect),sizeof(ORIENTION)); //@@
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.endDirect),sizeof(ORIENTION)); // @@
+
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE)); // @@
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE)); // @@
+
 
     return fout;
 }
@@ -1712,13 +1429,11 @@ QDataStream &operator<<(QDataStream &fout, const Chart_Line &cl)
 
 QDataStream &operator>>(QDataStream &fin, Chart_Line &cl)
 {
-    fin>>cl.startPos>>cl.endPos;
-    fin.readRawData(reinterpret_cast<char*>(&cl.startDirect),sizeof(ORIENTION));
-    fin.readRawData(reinterpret_cast<char*>(&cl.endDirect),sizeof(ORIENTION));
-    fin.readRawData(reinterpret_cast<char*>(&cl.startMagIndex),sizeof(int));
-    fin.readRawData(reinterpret_cast<char*>(&cl.endMagIndex),sizeof(int));
-    fin.readRawData(reinterpret_cast<char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE));
-    fin.readRawData(reinterpret_cast<char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE));
+    fin>>cl.startPos>>cl.endPos; //@@
+    fin.readRawData(reinterpret_cast<char*>(&cl.startDirect),sizeof(ORIENTION)); //@@
+    fin.readRawData(reinterpret_cast<char*>(&cl.endDirect),sizeof(ORIENTION)); //@@
+    fin.readRawData(reinterpret_cast<char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE)); //@@
+    fin.readRawData(reinterpret_cast<char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE)); //@@
 
     return fin;
 }

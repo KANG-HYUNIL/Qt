@@ -1,0 +1,44 @@
+<RCC>
+    <qresource prefix="/weather_icons">
+        <file>weather_icons/cloudy.png</file>
+        <file>weather_icons/rainy.png</file>
+        <file>weather_icons/snowfall.png</file>
+        <file>weather_icons/sunny.png</file>
+        <file>weather_icons/1.png</file>
+        <file>weather_icons/2.png</file>
+        <file>weather_icons/3.png</file>
+        <file>weather_icons/4.png</file>
+        <file>weather_icons/5.png</file>
+        <file>weather_icons/6.png</file>
+        <file>weather_icons/7.png</file>
+        <file>weather_icons/8.png</file>
+        <file>weather_icons/9.png</file>
+        <file>weather_icons/10.png</file>
+        <file>weather_icons/11.png</file>
+        <file>weather_icons/12.png</file>
+        <file>weather_icons/13.png</file>
+        <file>weather_icons/14.png</file>
+        <file>weather_icons/15.png</file>
+        <file>weather_icons/16.png</file>
+        <file>weather_icons/17.png</file>
+        <file>weather_icons/18.png</file>
+        <file>weather_icons/19.png</file>
+        <file>weather_icons/20.png</file>
+        <file>weather_icons/21.png</file>
+        <file>weather_icons/22.png</file>
+        <file>weather_icons/23.png</file>
+        <file>weather_icons/24.png</file>
+        <file>weather_icons/25.png</file>
+        <file>weather_icons/26.png</file>
+        <file>weather_icons/27.png</file>
+        <file>weather_icons/28.png</file>
+        <file>weather_icons/29.png</file>
+        <file>weather_icons/30.png</file>
+        <file>weather_icons/31.png</file>
+        <file>weather_icons/32.png</file>
+        <file>weather_icons/33.png</file>
+        <file>weather_icons/34.png</file>
+        <file>weather_icons/35.png</file>
+        <file>weather_icons/36.png</file>
+    </qresource>
+</RCC>

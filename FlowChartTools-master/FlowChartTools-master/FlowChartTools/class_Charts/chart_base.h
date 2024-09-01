@@ -6,7 +6,6 @@
 #include <QPen>
 #include <QPainterPath>
 #include <QPolygon>
-
 #include <QWidget>
 #include <QPoint>
 #include <QDebug>
@@ -14,7 +13,6 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QSizePolicy>
-
 #include <vector>
 #include <algorithm>
 
@@ -37,72 +35,72 @@ class Chart_Base :public QWidget
     friend class FlowChart;
 private:
 
-    static int magPointWidth;                   // Padding信息-磁力点宽度
-    static int sizePointWidth;                  // Padding信息-大小点宽度
-    static int magPointWidth1_2;                // Padding信息-磁力点一半宽度
-    static int sizePointWidth1_2;               // Padding信息-大小点一半宽度
-    static int pointLineWidth;                  // Padding信息-大小点、磁力点线宽度
+    static int magPointWidth;                   // Padding信息-磁力点宽度  자석점의 너비
+    static int sizePointWidth;                  // Padding信息-大小点宽度  크기 조절점의 너비 @@
+    static int magPointWidth1_2;                // Padding信息-磁力点一半宽度    자석점의 너비의 절반
+    static int sizePointWidth1_2;               // Padding信息-大小点一半宽度    크기 조절점의 너비의 절반 @@
+    static int pointLineWidth;                  // Padding信息-大小点、磁力点线宽度     자석점, 크기 조절점선의 너비
     static int pointLineWidth1_2;               // Padding信息-大小点、磁力点线线一半宽度
-    static int chartIDCount;                    // 总ID计数
-    static const int magPointAutoMagiRange = 10;// 磁力点自动吸附范围
-    static const int borderWidth = 20;          // Border信息-禁止绘画区域宽度
-    static const int minSizeWH = 40;            // 图形最小宽高
+    static int chartIDCount;                    // 总ID计数    모든 Id의 개수(그려져 있는 도형의 개수) @@
+    static const int magPointAutoMagiRange = 10;// 磁力点自动吸附范围    자석점의 자동 자석 붙는 범위
+    static const int borderWidth = 20;          // Border信息-禁止绘画区域宽度    경기 너비 @@
+    static const int minSizeWH = 40;            // 图形最小宽高   도형의 최소 너비와 높이 @@
     static const int textBorderWidth = 10;      // 文件边界最小宽高
 
 
-    bool showAll = true;    // 显示大小控制点和磁力点？ ###
-    bool showMag = false;   // 显示磁力点？ ###
-    ORIENTION lastType = ORIENTION::NONE;               // 改变大小状态切换
-    MOUSE_EVENT_TYPE curFlag = MOUSE_EVENT_TYPE::NONE;  // 鼠标事件类型
-    ORIENTION curIndex = ORIENTION::NONE;               // 当前选中大小点、磁力点方向
-    PaintChartType chartType = PaintChartType::NONE;    // 图形类型
+    bool showAll = true;    // 显示大小控制点和磁力点？ ###크기 조절점과 자석점을 모두 보이는 여부 결정
+    bool showMag = false;   // 显示磁力点？ ###자석점을 보이는 여부 결정
+    ORIENTION lastType = ORIENTION::NONE;               // 改变大小状态切换  @@
+    MOUSE_EVENT_TYPE curFlag = MOUSE_EVENT_TYPE::NONE;  // 鼠标事件类型   마우스 이벤트 종류  @@
+    ORIENTION curIndex = ORIENTION::NONE;               // 当前选中大小点、磁力点方向  @@
+    PaintChartType chartType = PaintChartType::NONE;    // 图形类型 그리는 도형의 종류  @@
     int ID;         // 图形编号
 
 
     static void resetStaticVal(){
         Chart_Base::magPointWidth = 7;
-        Chart_Base::sizePointWidth = 9;
+        Chart_Base::sizePointWidth = 9;  //@@
         Chart_Base::magPointWidth1_2 = magPointWidth/2;
-        Chart_Base::sizePointWidth1_2 = sizePointWidth/2;
+        Chart_Base::sizePointWidth1_2 = sizePointWidth/2;  //@@
         Chart_Base::pointLineWidth = 2;
         Chart_Base::pointLineWidth1_2 = pointLineWidth/2;
-        Chart_Base::chartIDCount = 0;
+        Chart_Base::chartIDCount = 0; // @@
     }
-    void varInit(int mpw=7,int spw=9,int plw=2,bool sa=true,bool smo=false);// 变量默认初始化函数
-    void widgetPosInit(int x=0,int y=0,int w=minSizeWH,int h=minSizeWH);    // 窗体位置信息默认初始化函数
-    void paintInit();        // 图形绘制信息默认初始化
-    void pointInit();        // 大小点和控制点默认初始化
+    void varInit(int mpw=7,int spw=9,int plw=2,bool sa=true,bool smo=false);// 变量默认初始化函数  @@
+    void widgetPosInit(int x=0,int y=0,int w=minSizeWH,int h=minSizeWH);    // 窗体位置信息默认初始化函数 @@
+    void paintInit();        // 图形绘制信息默认初始化  @@
+    void pointInit();        // 大小点和控制点默认初始化 @@
     void textInit();         // 文字内容默认初始化
     void colorInit();        // 颜色默认初始化
 
-    static void updatePaddingInfo();    // 更新Padding信息
-    void updateWidgetPosInof();         // 更新Widget位置信息
+    static void updatePaddingInfo();    // 更新Padding信息   @@
+    void updateWidgetPosInof();         // 更新Widget位置信息  @@
     virtual void specialWidgetUpdate(int &x,int &y, int &w, int &h){}   // 特殊图形边界范围更新函数
-    void updatePaintInfo();             // 更新绘图范围信息
+    void updatePaintInfo();             // 更新绘图范围信息  @@
     virtual void specialPaintUpdate(QPoint &s, QPoint &e){}             // 特殊绘图边界范围设置函数
-    virtual void updateSizePointInfo(); // 更新大小点位置信息
+    virtual void updateSizePointInfo(); // 更新大小点位置信息  @@
     virtual void updateMagPointInfo();  // 更新磁力点的位置信息
     void adjustPointInfo();             // 调整磁力点和大小点的位置信息
-    void updateSizePointPath();         // 更新大小点绘制范围信息
+    void updateSizePointPath();         // 更新大小点绘制范围信息  @@
     void updateMagPointPath();          // 更新磁力点的绘制范围信息
     virtual void updateMagPointLine();  // 更新磁力点上连线的位置信息
     void updateTextInfo();              // 更新显示文本的信息
 
 
-    virtual void paintChart(QPainter & p) = 0;  // 绘制图形
-    void paintSizePoint(QPainter & p);          // 绘制大小点
-    virtual void paintSizeEdge(QPainter & p);   // 绘制大小边界
+    virtual void paintChart(QPainter & p) = 0;  // 绘制图形  @@
+    void paintSizePoint(QPainter & p);          // 绘制大小点  @@@@@@
+    virtual void paintSizeEdge(QPainter & p);   // 绘制大小边界  @@
     void paintMagPoint(QPainter & p);           // 绘制磁力点
 
-    bool inPath(const QPointF &p);                                                                              // 是否可选的图形范围内，调用了下方3个函数
-    virtual bool inGraphisPath(const QPointF &p) {if(graphPath)return graphPath->contains(p);else return false;}// 是否在图形范围内
+    bool inPath(const QPointF &p);                                                                              // 是否可选的图形范围内，调用了下方3个函数  @@
+    virtual bool inGraphisPath(const QPointF &p) {if(graphPath)return graphPath->contains(p);else return false;}// 是否在图形范围内  @@
     bool inMagPath(const QPointF &p, ORIENTION &b, int &index) const;                                           // 是否在磁力点范围内
-    bool inSizePath(const QPointF &p, ORIENTION &b) const;                                                      // 是否在大小点范围内
+    bool inSizePath(const QPointF &p, ORIENTION &b) const;                                                      // 是否在大小点范围内 @@
 
 
 
-    void setStartPos(int x,int y);
-    void setEndPos(int x,int y);
+    void setStartPos(int x,int y);  // set widgets start x, y position @@
+    void setEndPos(int x,int y); // set widgets end x, y position @@
 
 
 
@@ -137,6 +135,7 @@ protected:
             CHART_LABEL_MOUSE_TYPE textMouseT1 = CHART_LABEL_MOUSE_TYPE::NONE;
             CHART_TEXT_MOUSE_TYPE textMouseT2;
         };
+        //직렬화, 스트림에 쓰기 기능하 연산자 재정의
         friend QDataStream &operator<<(QDataStream &fout,  const TextBase &tb)
         {
             fout.writeRawData(reinterpret_cast<const char*>(&tb.textType),sizeof(bool));
@@ -154,6 +153,7 @@ protected:
             }
             return fout;
         }
+        //역직렬화, 스트림에 쓰인 것 읽기 가능한 연산자 재정의
         friend QDataStream &operator>>(QDataStream &fin, TextBase &tb)
         {
             fin.readRawData(reinterpret_cast<char*>(&tb.textType),sizeof(bool));
@@ -183,7 +183,7 @@ protected:
         }
     }chartText; // 文本控件
 
-    class i_pointbase   // 点基本信息
+    class i_pointbase   // 点基本信息  @@
     {
     public:
         QPoint *i_pos = nullptr;        // 点位置
@@ -232,7 +232,7 @@ protected:
 
 
 
-    class i_sizepoint{   // 大小点信息类结构
+    class i_sizepoint{   // 大小点信息类结构  @@
     public:
         std::vector<i_pointbase*> i_point;  // 大小点指针容器
 
@@ -262,14 +262,12 @@ protected:
     };
 
     i_magpoint magPoint;       // 磁力点信息
-    i_sizepoint sizePoint;     // 大小点信息
-
-    QPainterPath *graphPath = nullptr;  // 图形绘制范围
-
-    QPoint paintStart;      // 图形绘制范围起点
-    QPoint paintEnd;        // 图形绘制范围终点
-    QPoint widgetStart;     // widget在画布上的起始位置：易变
-    QPoint widgetEnd;       // widget在画布上的结束位置：易变
+    i_sizepoint sizePoint;     // 大小点信息  @@
+    QPainterPath *graphPath = nullptr;  // 图形绘制范围  @@
+    QPoint paintStart;      // 图形绘制范围起点  @@
+    QPoint paintEnd;        // 图形绘制范围终点  @@
+    QPoint widgetStart;     // widget在画布上的起始位置：易变  @@
+    QPoint widgetEnd;       // widget在画布上的结束位置：易变  @@
 
     QPen paintChartDrawPen;     // 图形画笔
     QBrush paintChartFillPen;   // 图形填充
@@ -277,19 +275,19 @@ protected:
     static QPen paintDrawPen;       // 图形大小点、磁力点画笔
     static QBrush paintFillPen;     // 图形大小点、磁力点填充
 
-    bool movable = true;    // 图形位置可改变
+    bool movable = true;    // 图形位置可改变   @@
 
 
 
 
 
 public:
-
+    //explicit == dont allow automatic change types
     //explicit Chart_Base(QWidget *parent = nullptr, PaintChartType type = PaintChartType::NONE);
-    explicit Chart_Base(QWidget *parent = nullptr, PaintChartType type = PaintChartType::NONE, bool textType = false, bool mov = true, int mpc=4, int spc=4);
-    Chart_Base( int x, int y, int w, int h, QWidget *parent = nullptr, PaintChartType type = PaintChartType::NONE);
-    explicit Chart_Base(Chart_Base &);
-    virtual ~Chart_Base()
+    explicit Chart_Base(QWidget *parent = nullptr, PaintChartType type = PaintChartType::NONE, bool textType = false, bool mov = true, int mpc=4, int spc=4); // @@
+    Chart_Base( int x, int y, int w, int h, QWidget *parent = nullptr, PaintChartType type = PaintChartType::NONE); // can automatic change type @@
+    explicit Chart_Base(Chart_Base &);  // @@
+    virtual ~Chart_Base() //소멸자 @@
     {
         if(graphPath)
         {
@@ -301,11 +299,10 @@ public:
 
 public:
 //    void setGeometryNew(int x,int y,int w, int h);  // 设置位置、大小、更新数据
-    void setXY(int x, int y);                           // 设置位置
-    //void setTextXY(int x, int y);
-    void setWidthHeight(int x, int y);                  // 设置大小、更新数据，用于创建时
-    void setWidthHeight(int x, int y, ORIENTION type);  // 设置大小、更新数据，用于创建好之后
-    void applyWidthHeight();                            // 更新数据，用于读取时
+    void setXY(int x, int y);                           // 设置位置  @@
+    void setWidthHeight(int x, int y);                  // 设置大小、更新数据，用于创建时  @@
+    void setWidthHeight(int x, int y, ORIENTION type);  // 设置大小、更新数据，用于创建好之后  @@
+    void applyWidthHeight();                            // 更新数据，用于读取时  @@
     bool autoSetMagi(int &x, int &y, int &index);   // 磁力点吸附函数
     int getMagiPointAbsX(int i){;return magPoint.i_point[i]->getX() + x();} // 获取磁力点绝对坐标
     int getMagiPointAbsY(int i){;return magPoint.i_point[i]->getY() + y();} // 获取磁力点相对坐标
@@ -336,24 +333,20 @@ public:
         }
     }
     ORIENTION getMagiPointDirect(int i){return magPoint.i_point[i]->getRotate();}       // 获取磁力点的索引位置
-    void overlapChartMousePressed(QMouseEvent *event);  // 鼠标点击事件Z-index检测
-    void overlapChartMouseMove(QMouseEvent *event);     // 鼠标移动事件Z-index检测
-    void setMovalbe(bool f);            // 设置可否移动位置
-    int & getID(void){return ID;}       // 获得唯一ID值
-//    void setSizePoint(const std::vector<QPoint> &p);
-//    void setMagPoint(const std::vector<QPoint> &p);
-    void deleteThisChart();
+    void overlapChartMousePressed(QMouseEvent *event);  // 鼠标点击事件Z-index检测  @@
+    void overlapChartMouseMove(QMouseEvent *event);     // 鼠标移动事件Z-index检测  @@
+    void setMovalbe(bool f);            // 设置可否移动位置  @@
+    int & getID(void){return ID;}       // 获得唯一ID值  @@
+    void deleteThisChart();  //
 
-    static void saveStaticValue(QDataStream &fout); // 保存静态数据成员
-    static void loadStaticValue(QDataStream &fin);  // 加载静态数据成员
-    friend QDataStream &operator<<(QDataStream &fout, const  Chart_Base &cb);   // 输出运算符重载
-    friend QDataStream &operator>>(QDataStream &fin, Chart_Base &cb);           // 输入运算符重载
+    static void saveStaticValue(QDataStream &fout); // 保存静态数据成员  @@
+    static void loadStaticValue(QDataStream &fin);  // 加载静态数据成员  @@
+    friend QDataStream &operator<<(QDataStream &fout, const  Chart_Base &cb);   // 输出运算符重载  @@
+    friend QDataStream &operator>>(QDataStream &fin, Chart_Base &cb);           // 输入运算符重载  @@
 
 signals:
-    void sendThisClass(Chart_Base *,int x,int y);       // 发送自己给画布
-//    void hideThisClass();
-    //void sendFlag(int f);
-    void setTypeChangeSize(ORIENTION i);                            // 设置画布中的鼠标状态为改变大小
+    void sendThisClass(Chart_Base *,int x,int y);       // 发送自己给画布  @@
+    void setTypeChangeSize(ORIENTION i);                            // 设置画布中的鼠标状态为改变大小  @@
     void setTypeCreateMagPoint(Chart_Base *,ORIENTION d, int i);    // 设置画布中的鼠标状态为创建连线
 
 
@@ -369,15 +362,12 @@ public slots:
 
 
 protected:// 事件
-    virtual void paintEvent(QPaintEvent *event);            // 绘制控件事件
-
-//    bool eventFilter(QObject *target, QEvent *event);
-    virtual void mousePressEvent(QMouseEvent *event);       // 鼠标按下事件
-    virtual void mouseMoveEvent(QMouseEvent *event);        // 鼠标移动事件
-    virtual void mouseReleaseEvent(QMouseEvent *event);     // 鼠标释放事件
-    virtual void mouseDoubleClickEvent(QMouseEvent *event); // 鼠标双击事件
-
-    virtual void leaveEvent(QEvent *event);                 // 离开widget事件
+    virtual void paintEvent(QPaintEvent *event);            // 绘制控件事件  @@
+    virtual void mousePressEvent(QMouseEvent *event);       // 鼠标按下事件  @@
+    virtual void mouseMoveEvent(QMouseEvent *event);        // 鼠标移动事件  @@
+    virtual void mouseReleaseEvent(QMouseEvent *event);     // 鼠标释放事件  @@
+    virtual void mouseDoubleClickEvent(QMouseEvent *event); // 鼠标双击事件  @@
+    virtual void leaveEvent(QEvent *event);                 // 离开widget事件  @@
 
 
 };

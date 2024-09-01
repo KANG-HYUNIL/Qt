@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qss/myQss.qss</file>
+        <file>qss/map (3).osm</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/enlarge.png</file>
+        <file>images/reduce.png</file>
+        <file>images/showroad.png</file>
+        <file>images/back.png</file>
+        <file>images/Clock.png</file>
+        <file>images/Map.png</file>
+        <file>images/Message.png</file>
+        <file>images/Music.png</file>
+        <file>images/Picture.png</file>
+        <file>images/Video.png</file>
+        <file>images/Weather.png</file>
+        <file>images/mainwindow.png</file>
+        <file>images/Next.png</file>
+        <file>images/Pause.png</file>
+        <file>images/Previous.png</file>
+        <file>images/video1.png</file>
+        <file>images/background1.png</file>
+        <file>images/background2.png</file>
+        <file>images/background3.jpg</file>
+        <file>images/background4.png</file>
+        <file>images/Search.png</file>
+        <file>images/background5.jpg</file>
+    </qresource>
+</RCC>

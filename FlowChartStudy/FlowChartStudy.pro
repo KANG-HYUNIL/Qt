@@ -9,21 +9,15 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    chart_label.cpp \
+    chart_base.cpp \
     chart_line.cpp \
-    chart_parent.cpp \
-    chart_plaintext.cpp \
-    flowchart.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    chart_label.h \
+    chart_base.h \
     chart_line.h \
-    chart_parent.h \
-    chart_plaintext.h \
     enums.h \
-    flowchart.h \
     mainwindow.h
 
 FORMS += \

@@ -269,8 +269,8 @@ void Chart_Line::drawLineHead(const ORIENTION o,const LINE_HEAD_TYPE lht,const i
 
                 p.fillPath(tmp,p.pen().brush());
                 p.drawPath(tmp);
-                linePath.moveTo(x,y);
                 }break;
+                    linePath.moveTo(x,y);
                 case LINE_HEAD_TYPE::ARROW0:{
                     linePath.lineTo(x,y);
                 }break;
@@ -837,6 +837,11 @@ void Chart_Line::paintChart(QPainter & p)
             }
             //linePath.lineTo(endPos.rx(),endPos.ry());
         }break;
+
+
+
+
+
         case ORIENTION::EAST:{
 
             sx = startPos.rx() + extendWidth;
@@ -1007,6 +1012,9 @@ void Chart_Line::paintChart(QPainter & p)
             }
             //linePath.lineTo(endPos.rx(),endPos.ry());
         }break;
+
+
+
         case ORIENTION::SOUTH:
         {
             sx = startPos.rx();
@@ -1173,6 +1181,9 @@ void Chart_Line::paintChart(QPainter & p)
             }
             //linePath.lineTo(endPos.rx(),endPos.ry());
         }break;
+
+
+
         case ORIENTION::WEST:
         {
             sx = startPos.rx() - extendWidth;
@@ -1339,6 +1350,9 @@ void Chart_Line::paintChart(QPainter & p)
                 }
             }
         }break;
+
+
+
         case ORIENTION::STARTPOINT:{
             sx = startPos.rx();
             sy = startPos.ry();
@@ -1386,6 +1400,8 @@ void Chart_Line::paintChart(QPainter & p)
                 }break;
             };
         }break;
+
+
         case ORIENTION::NORTHEAST:{
             sx = startPos.rx() + extendWidth45;
             sy = startPos.ry() - extendWidth45;
@@ -1435,6 +1451,8 @@ void Chart_Line::paintChart(QPainter & p)
                 }break;
             };
         }break;
+
+
         case ORIENTION::NORTHWEST:{
             sx = startPos.rx() - extendWidth45;
             sy = startPos.ry() - extendWidth45;
@@ -1489,6 +1507,8 @@ void Chart_Line::paintChart(QPainter & p)
                 }break;
             };
         }break;
+
+
         case ORIENTION::SOUTHWEST:{
             sx = startPos.rx() - extendWidth45;
             sy = startPos.ry() + extendWidth45;
@@ -1543,6 +1563,9 @@ void Chart_Line::paintChart(QPainter & p)
                 }break;
             };
         }break;
+
+
+
         case ORIENTION::SOUTHEAST:{
             sx = startPos.rx() + extendWidth45;
             sy = startPos.ry() + extendWidth45;
@@ -1597,6 +1620,8 @@ void Chart_Line::paintChart(QPainter & p)
                 }break;
             };
         }break;
+
+
         default:{
         }
     }
@@ -1672,15 +1697,17 @@ void Chart_Line::specialPaintUpdate(QPoint &s, QPoint &e)
     e.setX(e.rx() + extendWidth);
     e.setY(e.ry() + extendWidth);
 }
+
+//연산자 재정의, 시작점과 끝점, 시작점과 끝점의 방향, MagIndex, 화살표의 종류 정보를 스트림에 기록
 QDataStream &operator<<(QDataStream &fout, const Chart_Line &cl)
 {
     fout<<cl.startPos<<cl.endPos;
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.startDirect),sizeof(ORIENTION));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.endDirect),sizeof(ORIENTION));
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.startDirect),sizeof(ORIENTION)); //@@
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.endDirect),sizeof(ORIENTION)); // @@
     fout.writeRawData(reinterpret_cast<const char*>(&cl.startMagIndex),sizeof(int));
     fout.writeRawData(reinterpret_cast<const char*>(&cl.endMagIndex),sizeof(int));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE));
-    fout.writeRawData(reinterpret_cast<const char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE));
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE)); // @@
+    fout.writeRawData(reinterpret_cast<const char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE)); // @@
     if(cl.startChartMag)
         fout.writeRawData(reinterpret_cast<const char*>(&cl.startChartMag->getID()),sizeof(int));
     else{
@@ -1696,15 +1723,17 @@ QDataStream &operator<<(QDataStream &fout, const Chart_Line &cl)
 
     return fout;
 }
+
+//연산자 재정의, 스트림에 기록된 시작점과 끝점, 시작점과 끝점의 방향, MagIndex, 화살표의 종류 정보를 읽어오기
 QDataStream &operator>>(QDataStream &fin, Chart_Line &cl)
 {
-    fin>>cl.startPos>>cl.endPos;
-    fin.readRawData(reinterpret_cast<char*>(&cl.startDirect),sizeof(ORIENTION));
-    fin.readRawData(reinterpret_cast<char*>(&cl.endDirect),sizeof(ORIENTION));
+    fin>>cl.startPos>>cl.endPos; //@@
+    fin.readRawData(reinterpret_cast<char*>(&cl.startDirect),sizeof(ORIENTION)); //@@
+    fin.readRawData(reinterpret_cast<char*>(&cl.endDirect),sizeof(ORIENTION)); //@@
     fin.readRawData(reinterpret_cast<char*>(&cl.startMagIndex),sizeof(int));
     fin.readRawData(reinterpret_cast<char*>(&cl.endMagIndex),sizeof(int));
-    fin.readRawData(reinterpret_cast<char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE));
-    fin.readRawData(reinterpret_cast<char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE));
+    fin.readRawData(reinterpret_cast<char*>(&cl.startLineHeadType),sizeof(LINE_HEAD_TYPE)); //@@
+    fin.readRawData(reinterpret_cast<char*>(&cl.endLineHeadType),sizeof(LINE_HEAD_TYPE)); //@@
 
     return fin;
 }
