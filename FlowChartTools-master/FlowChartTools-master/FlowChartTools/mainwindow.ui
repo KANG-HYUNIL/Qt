@@ -42,7 +42,7 @@
          <x>0</x>
          <y>0</y>
          <width>131</width>
-         <height>876</height>
+         <height>880</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -234,6 +234,12 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QWidget" name="StylePanel" native="true">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="0" column="1">
            <widget class="QGroupBox" name="FillColorGroup">
@@ -271,97 +277,6 @@
                <property name="text">
                 <string/>
                </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QGroupBox" name="LineWidthGroup">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="title">
-             <string/>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string>线宽：</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="LineWidthCBox">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>50</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="editable">
-                <bool>false</bool>
-               </property>
-               <item>
-                <property name="text">
-                 <string>1px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>2px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>3px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>4px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>5px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>6px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>7px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>8px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>9px</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>10px</string>
-                </property>
-               </item>
               </widget>
              </item>
             </layout>
@@ -485,19 +400,6 @@
             </layout>
            </widget>
           </item>
-          <item row="0" column="6">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item row="0" column="5">
            <widget class="QGroupBox" name="LineEndStyleGroup">
             <property name="enabled">
@@ -575,6 +477,163 @@
             </layout>
            </widget>
           </item>
+          <item row="0" column="3">
+           <widget class="QGroupBox" name="LineWidthGroup">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>线宽：</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="LineWidthCBox">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>50</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="editable">
+                <bool>false</bool>
+               </property>
+               <item>
+                <property name="text">
+                 <string>1px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>5px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>6px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>7px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>8px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>9px</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>10px</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <layout class="QVBoxLayout" name="texts">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Find :</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="FindText">
+                <property name="undoRedoEnabled">
+                 <bool>false</bool>
+                </property>
+                <property name="readOnly">
+                 <bool>false</bool>
+                </property>
+                <property name="overwriteMode">
+                 <bool>true</bool>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::TextInteractionFlag::LinksAccessibleByKeyboard|Qt::TextInteractionFlag::TextEditable|Qt::TextInteractionFlag::TextEditorInteraction|Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="FindAllBtn">
+                <property name="text">
+                 <string>Find All</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>Replace to :</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPlainTextEdit" name="ReplaceText">
+                <property name="overwriteMode">
+                 <bool>true</bool>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::TextInteractionFlag::LinksAccessibleByKeyboard|Qt::TextInteractionFlag::TextEditable|Qt::TextInteractionFlag::TextEditorInteraction|Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="ReplaceBtn">
+                <property name="text">
+                 <string>Replace All</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>
@@ -593,7 +652,7 @@
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="1" column="0">
+           <item row="0" column="0">
             <widget class="FlowChart" name="flowChart_widget" native="true">
              <property name="minimumSize">
               <size>
@@ -618,7 +677,7 @@
      <x>0</x>
      <y>0</y>
      <width>1270</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

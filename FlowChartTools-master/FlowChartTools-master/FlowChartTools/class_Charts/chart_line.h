@@ -85,18 +85,26 @@ public:
     }
     Chart_Line(Chart_Line &cr):Chart_Base(cr)
     {
-        chartText.textType1->setAttribute(Qt::WA_StyledBackground,true);
-        chartText.textType1->setAutoFillBackground(true);
-        chartText.textType1->setPalette(QPalette(QPalette::Window, QColor(255,255,255,150)));
-        chartText.textType1->setStyleSheet("QLabel{background:#00FF00;}");
+        // chartText.textType1->setAttribute(Qt::WA_StyledBackground,true);
+        // chartText.textType1->setAutoFillBackground(true);
+        // chartText.textType1->setPalette(QPalette(QPalette::Window, QColor(255,255,255,150)));
+        // chartText.textType1->setStyleSheet("QLabel{background:#00FF00;}");
+        chartText.textType2->setAttribute(Qt::WA_StyledBackground, true);
+        chartText.textType2->setAutoFillBackground(true);
+        chartText.textType2->setPalette(QPalette(QPalette::Base, QColor(255, 255, 255, 150)));
+        chartText.textType2->setStyleSheet("QPlainTextEdit{background:#00FF00;}");
 
     }
     Chart_Line( int x1, int y1, int x2, int y2, QWidget *parent = nullptr,PaintChartType type = PaintChartType::LINE) : Chart_Base(x1,y1,x2,y2,parent,type)
     {
-        chartText.textType1->setAttribute(Qt::WA_StyledBackground,true);
-        chartText.textType1->setAutoFillBackground(true);
-        chartText.textType1->setPalette(QPalette(QPalette::Window, QColor(255,255,255,150)));
-        chartText.textType1->setStyleSheet("QLabel{background:#00FF00;}");
+        // chartText.textType1->setAttribute(Qt::WA_StyledBackground,true);
+        // chartText.textType1->setAutoFillBackground(true);
+        // chartText.textType1->setPalette(QPalette(QPalette::Window, QColor(255,255,255,150)));
+        // chartText.textType1->setStyleSheet("QLabel{background:#00FF00;}");
+        chartText.textType2->setAttribute(Qt::WA_StyledBackground, true);
+        chartText.textType2->setAutoFillBackground(true);
+        chartText.textType2->setPalette(QPalette(QPalette::Base, QColor(255, 255, 255, 150)));
+        chartText.textType2->setStyleSheet("QPlainTextEdit{background:#00FF00;}");
     }
     ~Chart_Line(){}
 

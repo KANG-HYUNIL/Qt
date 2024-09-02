@@ -35,6 +35,18 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->flowChart_widget->setStyleSheet(QStringLiteral("background-color: rgb(206, 232, 255);"));
     //ui->flowChart_widget->setAttribute(Qt::WA_StyledBackground,true);
     //ui->flowChart_widget->update();
+
+    //add btn connect for search and replace texts
+    //ui->ReplaceText->toPlainText();
+    connect(ui->FindAllBtn, &QPushButton::clicked, this, [this]() {
+        QString searchText = ui->FindText->toPlainText();
+        ui->flowChart_widget->textSearch(searchText);
+    });
+    connect(ui->ReplaceBtn, &QPushButton::clicked, this, [this]() {
+        QString searchText = ui->FindText->toPlainText();
+        QString replaceText = ui->ReplaceText->toPlainText();
+        ui->flowChart_widget->replaceText(searchText, replaceText);
+    });
 }
 
 MainWindow::~MainWindow()

@@ -1,6 +1,6 @@
 ﻿#ifndef FLOWCHART_H
 #define FLOWCHART_H
-#pragma execution_character_set("utf-8")
+//#pragma execution_character_set("utf-8")
 #include <map>
 #include <stdexcept>
 
@@ -17,7 +17,13 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QColorDialog>
-
+#include <QLabel>
+#include <QFont>
+#include <QPalette>
+#include <QPlainTextEdit>
+#include <QTextCursor>
+#include <QTextCharFormat>
+#include <QTextDocument>
 #include "class_Charts/chart_base.h"
 #include "class_Charts/chart_rect.h"
 #include "class_Charts/chart_diamond.h"
@@ -53,6 +59,9 @@ private:
 
     std::vector<Chart_Base*> charts;    // 画板上图形的集合
     std::vector<Chart_Base*> line;      // 画板上线的集合
+
+    //add new vector for text search
+    std::vector<Chart_Base*> textSearchResult; //save the
 
     MOUSE_EVENT_TYPE mouseEventType = MOUSE_EVENT_TYPE::NONE;   // 当前鼠标事件类型
 
@@ -105,8 +114,8 @@ virtual void paintEvent(QPaintEvent *event);
 virtual void mousePressEvent(QMouseEvent *event);
 virtual void mouseMoveEvent(QMouseEvent *event);
 virtual void mouseReleaseEvent(QMouseEvent *event);
-virtual void keyPressEvent(QKeyEvent *ev);
-virtual void keyReleaseEvent(QKeyEvent *ev);
+// virtual void keyPressEvent(QKeyEvent *ev);
+// virtual void keyReleaseEvent(QKeyEvent *ev);
 
 //bool eventFilter(QObject *target, QEvent *event);
 signals:
@@ -124,11 +133,22 @@ public:
     void setSelChartLineColor(const QColor &color);     // 设置图形线条颜色
     void setSelChartFillColor(const QColor &color);     // 设置图形填充颜色
 
+    //add for text search and replace
+    void textSearch(QString searchText);
+    void onHighlight(QString searchText);
+    void offHighlight();
+    void replaceText(QString searchText, QString replaceText);
+
 public slots:
     void setMousePressedFlag(MOUSE_EVENT_TYPE);         // 设置鼠标按下事件类型
     void setPaintChart();                           // 设置将要绘制的图形
     void setSelecChart(Chart_Base *, int ,int);     // 设置选中的画板的图像
-//    void resetSeletcChart();
+
+    //add for text search and replace method
+    //void textSearch(QString searchText);
+   /* void onHighlight(QString searchText);
+    void offHighlight()*/;
+    //void replaceText(QString searchText, QString replaceText);
 
 public slots:
     void setPaintChart_Rect(){curPaintChartType = PaintChartType::RECT;setPaintChart();}                // 获取一个新的矩形

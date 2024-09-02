@@ -1,6 +1,6 @@
 ﻿#ifndef CHART_BASE_H
 #define CHART_BASE_H
-#pragma execution_character_set("utf-8")
+//#pragma execution_character_set("utf-8")
 
 #include <QPainter>
 #include <QPen>
@@ -141,10 +141,14 @@ protected:
             fout.writeRawData(reinterpret_cast<const char*>(&tb.textType),sizeof(bool));
             if(tb.textType)
             {
-                QLabel * ql = tb.textType1;
-                fout<<ql->geometry()<<ql->text().toUtf8().length();
-                fout.writeRawData(ql->text().toUtf8().data(),ql->text().toUtf8().length());
-                //fout.writeRawData(reinterpret_cast<char*>(tb.tmpEdit1),sizeof(QLineEdit));
+                QPlainTextEdit * qpte = tb.textType2;
+                fout<<qpte->geometry()<<qpte->toPlainText().toUtf8().length();
+                fout.writeRawData(qpte->toPlainText().toUtf8().data(),qpte->toPlainText().toUtf8().length());
+
+                // QLabel * ql = tb.textType1;
+                // fout<<ql->geometry()<<ql->text().toUtf8().length();
+                // fout.writeRawData(ql->text().toUtf8().data(),ql->text().toUtf8().length());
+                // //fout.writeRawData(reinterpret_cast<char*>(tb.tmpEdit1),sizeof(QLineEdit));
             }else{
                 QPlainTextEdit * qpte = tb.textType2;
                 fout<<qpte->geometry()<<qpte->toPlainText().toUtf8().length();
@@ -161,13 +165,21 @@ protected:
             fin>>tmpqr;
             if(tb.textType)
             {
-                QLabel * ql = tb.textType1;
-                ql->setGeometry(tmpqr);
+                QPlainTextEdit * qpte = tb.textType2;
+                qpte->setGeometry(tmpqr);
                 int len;
                 fin>>len;
                 QByteArray tmp(len+1,'\0');
                 fin.readRawData(tmp.data(),len);
-                ql->setText(QString(tmp));
+                qpte->setPlainText(QString(tmp));
+
+                // QLabel * ql = tb.textType1;
+                // ql->setGeometry(tmpqr);
+                // int len;
+                // fin>>len;
+                // QByteArray tmp(len+1,'\0');
+                // fin.readRawData(tmp.data(),len);
+                // ql->setText(QString(tmp));
                 //fin.readRawData(reinterpret_cast<char*>(tb.tmpEdit1),sizeof(QLineEdit));
             }else{
                 QPlainTextEdit * qpte = tb.textType2;

@@ -3,7 +3,7 @@
 
 FlowChart::FlowChart(QWidget *parent, Qt::WindowFlags f) : QWidget(parent,f)
 {
-    this->grabKeyboard();
+    //this->grabKeyboard();
 //    installEventFilter(this);
     initVar();
     setMouseTracking(true);
@@ -136,7 +136,7 @@ void FlowChart::setSelecChart(Chart_Base * cb, int x, int y)
 {
 
     emit disableStyle();
-    this->grabKeyboard();
+    //this->grabKeyboard();
     if(curSelecChart != nullptr) curSelecChart->hideMagSize();
     curSelecChart = cb;
     curSelecChart->showMagSize();
@@ -315,7 +315,7 @@ bool FlowChart::delChart(Chart_Base *&cb)
                 }
             }
 #endif
-            delete[] tmp;
+            delete tmp;
 
             return true;
         }
@@ -809,71 +809,294 @@ void FlowChart::mouseReleaseEvent(QMouseEvent *event)
     }
 
 }
-void FlowChart::keyPressEvent(QKeyEvent *ev)
+// void FlowChart::keyPressEvent(QKeyEvent *ev)
+// {
+//     ev->ignore();
+//     switch(ev->key())
+//     {
+//         case Qt::Key_Escape:
+//         {
+//             if(curSelecChart)
+//             {
+//                 curSelecChart->hideMagSize();
+//                 curSelecChart = nullptr;
+//             }
+//         }break;
+//         case Qt::Key_Delete:
+//         {
+//             if(curSelecChart)
+//             {
+//                 if(curSelecChart->chartType == PaintChartType::LINE)
+//                 {
+//                     if(!delLine(curSelecChart))
+//                     {
+//                         qDebug()<<"Error";
+//                     }
+//                 }else{
+//                     if(!delChart(curSelecChart))
+//                     {
+//                         qDebug()<<"Error";
+//                     }
+//                 }
+//                 curSelecChart = nullptr;
+//             }
+//         }break;
+// #if 0
+//         case Qt::Key_Q:
+//         {
+//             qDebug()<<"总个数：charts:"<<charts.size()<<",lines:"<<line.size();
+//             for(auto it = charts.begin();it != charts.end();it++)
+//             {
+//                 qDebug()<<"\t磁力点个数："<<(*it)->magPoint.i_point.size();
+//                 for(auto magit = (*it)->magPoint.i_point.begin();magit!=(*it)->magPoint.i_point.end();magit++)
+//                 {
+//                     qDebug()<<"\t\t线头个数："<<(*magit)->i_lineStart.size()<<"，线尾个数："<<(*magit)->i_lineEnd.size();
+//                     for(auto magLineStIt = (*magit)->i_lineStart.begin();magLineStIt != (*magit)->i_lineStart.end();magLineStIt++)
+//                     {
+//                         qDebug()<<"\t\t\t线头ID："<<(*magLineStIt)->getID();
+//                     }
+//                     for(auto magLineEnIt = (*magit)->i_lineEnd.begin();magLineEnIt != (*magit)->i_lineEnd.end();magLineEnIt++)
+//                     {
+//                         qDebug()<<"\t\t\t线尾ID："<<(*magLineEnIt)->getID();
+//                     }
+//                 }
+//             }
+//             qDebug();
+//             for(auto it = line.begin();it != line.end();it++)
+//             {
+//                 qDebug()<<"\t线头："<<((dynamic_cast<Chart_Line*>(*it)->getStartChart() == nullptr)?"-":"有")<<"，线尾："<<(((dynamic_cast<Chart_Line*>(*it)->getEndChart()) == nullptr)?"-":"有");
+//             }
+//         }break;
+// #endif
+//         default:{
+//             ev->ignore();
+//         }
+//     }
+// }
+
+
+//add method for text search and replace, highlight
+void FlowChart::textSearch(QString searchText)
 {
-    ev->ignore();
-    switch(ev->key())
+    if (searchText == ""){
+        return;
+    }
+
+    offHighlight();
+    textSearchResult.clear();
+
+    for (Chart_Base* chart: charts) {
+        if (chart->chartText.textType) {
+            if (chart->chartText.textType2->toPlainText().contains(searchText)) {
+                textSearchResult.push_back(chart);
+                qDebug() << chart->chartText.textType2->toPlainText();
+            }
+
+
+            // if (chart->chartText.textType1->text().contains(searchText)) {
+            //     textSearchResult.push_back(chart);
+            //     qDebug() << chart->chartText.textType1->text();
+            // }
+        }
+
+        else {
+            if (chart->chartText.textType2->toPlainText().contains(searchText)) {
+                textSearchResult.push_back(chart);
+                qDebug() << chart->chartText.textType2->toPlainText();
+            }
+        }
+    }
+
+    for (Chart_Base* l : line) {
+        if (l->chartText.textType) {
+
+            if (l->chartText.textType2->toPlainText().contains(searchText)) {
+                textSearchResult.push_back(l);
+                qDebug() << l->chartText.textType2->toPlainText();
+            }
+            // if (l->chartText.textType1->text().contains(searchText)) {
+            //     textSearchResult.push_back(l);
+            //     qDebug() << l->chartText.textType1->text();
+            // }
+        }
+
+        else {
+            if (l->chartText.textType2->toPlainText().contains(searchText)) {
+                textSearchResult.push_back(l);
+                qDebug() << l->chartText.textType2->toPlainText();
+            }
+        }
+    }
+
+    onHighlight(searchText);
+
+}
+
+
+void FlowChart::onHighlight(QString searchText)
+{
+    for (Chart_Base* result : textSearchResult)
     {
-        case Qt::Key_Escape:
-        {
-            if(curSelecChart)
-            {
-                curSelecChart->hideMagSize();
-                curSelecChart = nullptr;
-            }
-        }break;
-        case Qt::Key_Delete:
-        {
-            if(curSelecChart)
-            {
-                if(curSelecChart->chartType == PaintChartType::LINE)
-                {
-                    if(!delLine(curSelecChart))
-                    {
-                        qDebug()<<"Error";
-                    }
-                }else{
-                    if(!delChart(curSelecChart))
-                    {
-                        qDebug()<<"Error";
-                    }
-                }
-                curSelecChart = nullptr;
-            }
-        }break;
-#if 0
-        case Qt::Key_Q:
-        {
-            qDebug()<<"总个数：charts:"<<charts.size()<<",lines:"<<line.size();
-            for(auto it = charts.begin();it != charts.end();it++)
-            {
-                qDebug()<<"\t磁力点个数："<<(*it)->magPoint.i_point.size();
-                for(auto magit = (*it)->magPoint.i_point.begin();magit!=(*it)->magPoint.i_point.end();magit++)
-                {
-                    qDebug()<<"\t\t线头个数："<<(*magit)->i_lineStart.size()<<"，线尾个数："<<(*magit)->i_lineEnd.size();
-                    for(auto magLineStIt = (*magit)->i_lineStart.begin();magLineStIt != (*magit)->i_lineStart.end();magLineStIt++)
-                    {
-                        qDebug()<<"\t\t\t线头ID："<<(*magLineStIt)->getID();
-                    }
-                    for(auto magLineEnIt = (*magit)->i_lineEnd.begin();magLineEnIt != (*magit)->i_lineEnd.end();magLineEnIt++)
-                    {
-                        qDebug()<<"\t\t\t线尾ID："<<(*magLineEnIt)->getID();
-                    }
+        //이쪽 코드가 문제다
+        if (result->chartText.textType) {
+
+            QTextCursor cursor(result->chartText.textType2->document());
+
+            cursor.beginEditBlock();
+            QTextCharFormat format;
+            format.setFontWeight(QFont::Bold);
+            format.setFontUnderline(true);
+            format.setForeground(Qt::red);
+
+            while (!cursor.isNull() && !cursor.atEnd()) {
+                cursor = result->chartText.textType2->document()->find(searchText, cursor);
+
+                if (!cursor.isNull()) {
+                    cursor.mergeCharFormat(format);
                 }
             }
-            qDebug();
-            for(auto it = line.begin();it != line.end();it++)
-            {
-                qDebug()<<"\t线头："<<((dynamic_cast<Chart_Line*>(*it)->getStartChart() == nullptr)?"-":"有")<<"，线尾："<<(((dynamic_cast<Chart_Line*>(*it)->getEndChart()) == nullptr)?"-":"有");
+
+            cursor.endEditBlock();
+
+            qDebug() << "Text on";
+            qDebug() << result->chartText.textType2->toPlainText();
+
+
+
+            // QString fullText = result->chartText.textType1->text();
+            // //QString highlightText;
+
+            // QFont font = result->chartText.textType1->font();
+            // font.setBold(true);
+            // font.setUnderline(true);
+            // result->chartText.textType1->setFont(font);
+
+            // QPalette palette = result->chartText.textType1->palette();
+            // palette.setColor(QPalette::WindowText, Qt::red);
+            // result->chartText.textType1->setPalette(palette);
+
+
+
+            //qDebug() << "label on";
+            // qDebug() << fullText;
+            //qDebug() << highlightText;
+
+
+        }
+
+        else {
+            QTextCursor cursor(result->chartText.textType2->document());
+
+            cursor.beginEditBlock();
+            QTextCharFormat format;
+            format.setFontWeight(QFont::Bold);
+            format.setFontUnderline(true);
+            format.setForeground(Qt::red);
+
+            while (!cursor.isNull() && !cursor.atEnd()) {
+                cursor = result->chartText.textType2->document()->find(searchText, cursor);
+
+                if (!cursor.isNull()) {
+                    cursor.mergeCharFormat(format);
+                }
             }
-        }break;
-#endif
-        default:{
-            ev->ignore();
+
+            cursor.endEditBlock();
+
+            qDebug() << "Text on";
+            qDebug() << result->chartText.textType2->toPlainText();
+
+            // QTextCursor cursor(result->chartText.textType2->document()->rootFrame());
+            // QTextCharFormat format;
+
+            // format.setFontWeight(QFont::Bold);
+            // format.setFontUnderline(true);
+            // format.setForeground(Qt::red);
+
+            // cursor.select(QTextCursor::Document);
+            // cursor.mergeCharFormat(format);
+            // result->chartText.textType2->setTextCursor(cursor);
+
         }
     }
 }
-void FlowChart::keyReleaseEvent(QKeyEvent *ev)
+
+
+void FlowChart::offHighlight()
 {
-    ev->ignore();
+    for (Chart_Base* result : textSearchResult)
+    {
+        if (result->chartText.textType) {
+
+            QTextCursor cursor(result->chartText.textType2->document()->rootFrame());
+            QTextCharFormat format;
+
+            format.setFontWeight(QFont::Normal);
+            format.setFontUnderline(false);
+            format.setForeground(Qt::black);
+
+            cursor.select(QTextCursor::Document);
+            cursor.mergeCharFormat(format);
+            result->chartText.textType2->setTextCursor(cursor);
+
+
+            // QFont font = result->chartText.textType1->font();
+            // font.setBold(false);
+            // font.setUnderline(false);
+            // result->chartText.textType1->setFont(font);
+
+            // QPalette palette = result->chartText.textType1->palette();
+            // palette.setColor(QPalette::WindowText, Qt::black);
+            // result->chartText.textType1->setPalette(palette);
+
+        }
+
+        else {
+            QTextCursor cursor(result->chartText.textType2->document()->rootFrame());
+            QTextCharFormat format;
+
+            format.setFontWeight(QFont::Normal);
+            format.setFontUnderline(false);
+            format.setForeground(Qt::black);
+
+            cursor.select(QTextCursor::Document);
+            cursor.mergeCharFormat(format);
+            result->chartText.textType2->setTextCursor(cursor);
+        }
+    }
 }
+
+void FlowChart::replaceText(QString searchText, QString replaceText)
+{
+    textSearch(searchText);
+
+    offHighlight();
+
+    for (Chart_Base* result : textSearchResult)
+    {
+        if (result->chartText.textType) {
+            QString curText = result->chartText.textType2->toPlainText();
+            QString updateText = curText.replace(searchText, replaceText);
+            result->chartText.textType2->setPlainText(updateText);
+
+            // QString curText = result->chartText.textType1->text();
+            // QString updateText = curText.replace(searchText, replaceText);
+            // result->chartText.textType1->setText(updateText);
+        }
+
+        else {
+            QString curText = result->chartText.textType2->toPlainText();
+            QString updateText = curText.replace(searchText, replaceText);
+            result->chartText.textType2->setPlainText(updateText);
+        }
+    }
+
+    textSearch(searchText);
+
+}
+
+
+// void FlowChart::keyReleaseEvent(QKeyEvent *ev)
+// {
+//     ev->ignore();
+// }

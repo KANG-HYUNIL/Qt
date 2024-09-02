@@ -128,13 +128,31 @@ void Chart_Base::textInit()
 {
     if(chartText.textType)
     {
-        chartText.textType1 = new Chart_Label(this);
-        chartText.textType1->setText("文本注释");
-        chartText.textType1->setWordWrap(true);
-        chartText.textType1->move(paintStart.rx() + sizePointWidth,paintStart.ry() + sizePointWidth);
-        chartText.textType1->adjustSize();
-        connect(chartText.textType1,SIGNAL(setTypeChangeTextPos(CHART_LABEL_MOUSE_TYPE,int,int)),this,SLOT(setTypeChangeTextPos(CHART_LABEL_MOUSE_TYPE,int,int)));
-        //chartText.textType1->show();
+
+
+        chartText.textType2 = new Chart_PlainText(this);
+        chartText.textType2->appendPlainText("文本注释");
+        //chartText.textType2->show();
+        chartText.textType2->setFrameShape(QFrame::NoFrame);
+        chartText.textType2->setFrameShadow(QFrame::Plain);
+        chartText.textType2->move(paintStart.rx() + sizePointWidth,paintStart.ry() + sizePointWidth);
+        chartText.textType2->setStyleSheet("background:transparent;");
+        chartText.textType2->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+        chartText.textType2->adjustSize();
+        chartText.textType2->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+        chartText.textType2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        chartText.textType2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        connect(chartText.textType2,SIGNAL(setTypeChangeTextPos(CHART_TEXT_MOUSE_TYPE,int,int)),this,SLOT(setTypeChangeTextPos(CHART_TEXT_MOUSE_TYPE,int,int)));
+        chartText.textType2->setTextInteractionFlags(Qt::NoTextInteraction);
+
+
+        // chartText.textType1 = new Chart_Label(this);
+        // chartText.textType1->setText("文本注释");
+        // chartText.textType1->setWordWrap(true);
+        // chartText.textType1->move(paintStart.rx() + sizePointWidth,paintStart.ry() + sizePointWidth);
+        // chartText.textType1->adjustSize();
+        // connect(chartText.textType1,SIGNAL(setTypeChangeTextPos(CHART_LABEL_MOUSE_TYPE,int,int)),this,SLOT(setTypeChangeTextPos(CHART_LABEL_MOUSE_TYPE,int,int)));
+        // //chartText.textType1->show();
     }
     else
     {
@@ -353,23 +371,43 @@ void Chart_Base::updateTextInfo()
     w = w>0?w:0;
     if(chartText.textType)
     {
-        chartText.textType1->setMaximumWidth(w);
-        chartText.textType1->setMaximumHeight(w);
-        chartText.textType1->adjustSize();
-        if(chartText.textType1->x() + chartText.textType1->width() >paintEnd.rx())
+
+        chartText.textType2->setMaximumWidth(w);
+        chartText.textType2->setMaximumHeight(w);
+        chartText.textType2->adjustSize();
+        if(chartText.textType2->x() + chartText.textType2->width() >paintEnd.rx())
         {
-            if(paintEnd.rx() - chartText.textType1->width()<paintStart.rx())
-                chartText.textType1->move(paintStart.rx(),chartText.textType1->y());
+            if(paintEnd.rx() - chartText.textType2->width()<paintStart.rx())
+                chartText.textType2->move(paintStart.rx(),chartText.textType2->y());
             else
-                chartText.textType1->move(paintEnd.rx() - chartText.textType1->width(),chartText.textType1->y());
+                chartText.textType2->move(paintEnd.rx() - chartText.textType2->width(),chartText.textType2->y());
         }
-        if(chartText.textType1->y() + chartText.textType1->height() >paintEnd.ry())
+        if(chartText.textType2->y() + chartText.textType2->height() >paintEnd.ry())
         {
-            if(paintEnd.ry() - chartText.textType1->height()<paintStart.ry())
-                chartText.textType1->move(chartText.textType1->x(),paintStart.ry());
+            if(paintEnd.ry() - chartText.textType2->height()<paintStart.ry())
+                chartText.textType2->move(chartText.textType2->x(),paintStart.ry());
             else
-                chartText.textType1->move(chartText.textType1->x(),paintEnd.ry() - chartText.textType1->height());
+                chartText.textType2->move(chartText.textType2->x(),paintEnd.ry() - chartText.textType2->height());
         }
+
+
+        // chartText.textType1->setMaximumWidth(w);
+        // chartText.textType1->setMaximumHeight(w);
+        // chartText.textType1->adjustSize();
+        // if(chartText.textType1->x() + chartText.textType1->width() >paintEnd.rx())
+        // {
+        //     if(paintEnd.rx() - chartText.textType1->width()<paintStart.rx())
+        //         chartText.textType1->move(paintStart.rx(),chartText.textType1->y());
+        //     else
+        //         chartText.textType1->move(paintEnd.rx() - chartText.textType1->width(),chartText.textType1->y());
+        // }
+        // if(chartText.textType1->y() + chartText.textType1->height() >paintEnd.ry())
+        // {
+        //     if(paintEnd.ry() - chartText.textType1->height()<paintStart.ry())
+        //         chartText.textType1->move(chartText.textType1->x(),paintStart.ry());
+        //     else
+        //         chartText.textType1->move(chartText.textType1->x(),paintEnd.ry() - chartText.textType1->height());
+        // }
     }
     else
     {
@@ -976,13 +1014,28 @@ void Chart_Base::hideMagSize()
         showAll = false;
         if(chartText.textType)
         {
-            if(chartText.tmpEdit1)
+            if(chartText.tmpEdit2)
             {
-                chartText.textType1->setText(chartText.tmpEdit1->text());
-                chartText.textType1->adjustSize();
-                delete chartText.tmpEdit1;
-                chartText.tmpEdit1 = nullptr;
+
+                //chartText.setText(tmpLineEdit->text());
+                chartText.textType2->setPlainText(chartText.tmpEdit2->toPlainText());
+                chartText.textType2->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+
+                chartText.textType2->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+                chartText.textType2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                chartText.textType2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                chartText.textType2->adjustSize();
+                delete chartText.tmpEdit2;
+                chartText.tmpEdit2 = nullptr;
             }
+
+            // if(chartText.tmpEdit1)
+            // {
+            //     chartText.textType1->setText(chartText.tmpEdit1->text());
+            //     chartText.textType1->adjustSize();
+            //     delete chartText.tmpEdit1;
+            //     chartText.tmpEdit1 = nullptr;
+            // }
         }
         else
         {
@@ -1024,13 +1077,29 @@ void Chart_Base::hideMagOnly()
         showMag = false;
         if(chartText.textType)
         {
-            if(chartText.tmpEdit1)
+            if(chartText.tmpEdit2)
             {
-                chartText.textType1->setText(chartText.tmpEdit1->text());
-                chartText.textType1->adjustSize();
-                delete chartText.tmpEdit1;
-                chartText.tmpEdit1 = nullptr;
+
+                //chartText.setText(tmpLineEdit->text());
+                chartText.textType2->setPlainText(chartText.tmpEdit2->toPlainText());
+                chartText.textType2->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+
+                chartText.textType2->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+                chartText.textType2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                chartText.textType2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                chartText.textType2->adjustSize();
+                delete chartText.tmpEdit2;
+                chartText.tmpEdit2 = nullptr;
             }
+
+
+            // if(chartText.tmpEdit1)
+            // {
+            //     chartText.textType1->setText(chartText.tmpEdit1->text());
+            //     chartText.textType1->adjustSize();
+            //     delete chartText.tmpEdit1;
+            //     chartText.tmpEdit1 = nullptr;
+            // }
         }
         else
         {
@@ -1206,13 +1275,14 @@ void Chart_Base::mouseMoveEvent(QMouseEvent *event)
                 event->ignore();
             }
         }
-        if(chartText.textMouseT1 == CHART_LABEL_MOUSE_TYPE::CHANGE_POS)
+        if(chartText.textMouseT2 == CHART_TEXT_MOUSE_TYPE::CHANGE_POS)
         {
             emit sendThisClass(this,event->pos().rx()-borderWidth,event->pos().ry()-borderWidth);
             if(chartText.textType == 1)
             {
-                chartText.textType1->move(event->pos().rx()-chartText.chartTextMousePos.rx(),event->pos().ry()-chartText.chartTextMousePos.ry());
-                chartText.textType1->adjustSize();
+                chartText.textType2->move(event->pos().rx()-chartText.chartTextMousePos.rx(),event->pos().ry()-chartText.chartTextMousePos.ry());
+                // chartText.textType1->move(event->pos().rx()-chartText.chartTextMousePos.rx(),event->pos().ry()-chartText.chartTextMousePos.ry());
+                // chartText.textType1->adjustSize();
             }
             else
             {
@@ -1230,7 +1300,8 @@ void Chart_Base::mouseReleaseEvent(QMouseEvent *event)
 {
     if(chartText.textType)
     {
-        chartText.textMouseT1 = CHART_LABEL_MOUSE_TYPE::NONE;
+        chartText.textMouseT2 = CHART_TEXT_MOUSE_TYPE::NONE;
+        //chartText.textMouseT1 = CHART_LABEL_MOUSE_TYPE::NONE;
     }
     else
     {
@@ -1247,13 +1318,25 @@ void Chart_Base::mouseDoubleClickEvent(QMouseEvent *event)
         emit sendThisClass(this,event->pos().rx()-borderWidth,event->pos().ry()-borderWidth);
         if(chartText.textType)
         {
-            chartText.tmpEdit1 = new QLineEdit(chartText.textType1->text(),this);
-            chartText.textType1->setText("");
-            chartText.tmpEdit1->adjustSize();
-            chartText.tmpEdit1->setStyleSheet("background:transparent;");
-            chartText.tmpEdit1->setGeometry(chartText.textType1->x(),chartText.textType1->y(),chartText.textType1->width() + (textBorderWidth<<1),chartText.textType1->height() + (textBorderWidth<<1));
-            chartText.tmpEdit1->show();
-            chartText.tmpEdit1->setFocus();
+            qDebug() << "test";
+            qDebug() << chartText.textType;
+            chartText.tmpEdit2 = new QPlainTextEdit(chartText.textType2->toPlainText(),this);
+            chartText.textType2->setPlainText("");
+            chartText.tmpEdit2->adjustSize();
+            chartText.tmpEdit2->setStyleSheet("background:transparent;");
+            chartText.tmpEdit2->setGeometry(paintStart.rx() + textBorderWidth,paintStart.ry() + textBorderWidth,paintEnd.rx() - paintStart.rx() - (textBorderWidth<<1),paintEnd.ry() - paintStart.ry() - (textBorderWidth<<1));
+            chartText.tmpEdit2->show();
+            chartText.tmpEdit2->setFocus();
+
+
+
+            // chartText.tmpEdit1 = new QLineEdit(chartText.textType1->text(),this);
+            // chartText.textType1->setText("");
+            // chartText.tmpEdit1->adjustSize();
+            // chartText.tmpEdit1->setStyleSheet("background:transparent;");
+            // chartText.tmpEdit1->setGeometry(chartText.textType1->x(),chartText.textType1->y(),chartText.textType1->width() + (textBorderWidth<<1),chartText.textType1->height() + (textBorderWidth<<1));
+            // chartText.tmpEdit1->show();
+            // chartText.tmpEdit1->setFocus();
         }
         else
         {
@@ -1265,7 +1348,7 @@ void Chart_Base::mouseDoubleClickEvent(QMouseEvent *event)
             chartText.tmpEdit2->show();
             chartText.tmpEdit2->setFocus();
         }
-        this->grabKeyboard();
+        //this->grabKeyboard();
     }else{
         event->ignore();
     }
