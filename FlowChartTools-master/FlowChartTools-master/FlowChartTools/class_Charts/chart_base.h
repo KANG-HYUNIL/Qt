@@ -308,6 +308,12 @@ public:
         }
     }
 
+    //added codes
+    Chart_Base* clone() const
+    {
+        Chart_Base* newChart = new Chart_Base(*this);
+    }
+
 
 public:
 //    void setGeometryNew(int x,int y,int w, int h);  // 设置位置、大小、更新数据
@@ -361,6 +367,8 @@ signals:
     void setTypeChangeSize(ORIENTION i);                            // 设置画布中的鼠标状态为改变大小  @@
     void setTypeCreateMagPoint(Chart_Base *,ORIENTION d, int i);    // 设置画布中的鼠标状态为创建连线
 
+    //added codes
+    void deleteThisChartSignal(Chart_Base *);
 
 
 public slots:

@@ -46,6 +46,7 @@ void FlowChart::resetFlowChartPanel()
     setFileNameShow(fileIsSaved);
 }
 
+//파일을 저장된 상태로 만드는
 void FlowChart::setFileSetSaved(bool isSaved)
 {
     if(fileIsSaved != isSaved)
@@ -53,8 +54,10 @@ void FlowChart::setFileSetSaved(bool isSaved)
         fileIsSaved = isSaved;
         setFileNameShow(fileIsSaved);
     }
+
 }
 
+//실행 화면 이름을 바꾸는 함수, 저장이 안된 상태면 "*"을 붙여서 표시한다.
 void FlowChart::setFileNameShow(bool isSaved)
 {
     QString tmp;
@@ -152,18 +155,24 @@ void FlowChart::setSelecChart(Chart_Base * cb, int x, int y)
     }
 }
 
+
+//파일을 여는 장면?
 bool FlowChart::openChartFile()
 {
+    //파일이 저장되있지 않은 상태일 때
     if(!fileIsSaved)
     {
+        //경고창 띄우는 코드
         QMessageBox tmp(QMessageBox::Warning,tr("警告！"),tr("不保存文件就关闭？"),QMessageBox::NoButton,this->parentWidget());
         QPushButton *saveclose = tmp.addButton(tr("保存并关闭"),QMessageBox::ActionRole);
         QPushButton *nosaveclose = tmp.addButton(tr("不保存关闭"),QMessageBox::AcceptRole);
         QPushButton *cancel = tmp.addButton(tr("取消"),QMessageBox::RejectRole);
+
+        //경고창 버튼에 따른 코드 처리
         tmp.exec();
         if(tmp.clickedButton() == saveclose)
         {
-            if(saveChartFile())
+            if(saveChartFile()) //실 저장 처리를 담당하는 함수? 저장 성공 시 true 반환하는 듯.
             {
                 resetFlowChartPanel();
             }else
@@ -183,7 +192,7 @@ bool FlowChart::openChartFile()
     QString tmpFilePath = QFileDialog::getOpenFileName(this,tr("打开文件"),"F:",tr("FCT文件(*.fct)"));
     if(tmpFilePath == "") return false;
 
-    if(loadFile(tmpFilePath) == false)
+    if(loadFile(tmpFilePath) == false) //경로 상의 파일을 불러오는 코드, 확장자 양식이 맞지 않으면 불러오기 취소함.
     {
         QMessageBox::critical(this->parentWidget(),tr("错误！"),tr("打开文件失败！\n文件损坏或类型不正确"),QMessageBox::Ok);
         return false;
@@ -198,16 +207,17 @@ bool FlowChart::openChartFile()
     return true;
 }
 
+//파일을 저장하는 코드?
 bool FlowChart::saveChartFile()
 {
-    if(fileIsSaved)
+    if(fileIsSaved) //파일이 이미 저장된 상태면 바로 스킵함
     {
         return true;
     }else
     {
         if(fileIsOpened)
         {
-            if(saveFile(filePath))
+            if(saveFile(filePath)) //실제 파일을 저장하는 함수, 저장 완료 시 경로를 ""로 초기화.
             {
                 filePath = "";
             }else
@@ -215,7 +225,8 @@ bool FlowChart::saveChartFile()
                 QMessageBox::critical(this->parentWidget(),tr("错误！"),tr("保存文件失败！\n文件已占用或者访问权限不足"),QMessageBox::Ok);
                 return false;
             }
-        }else{
+        }
+        else{
             QString tmpFilePath = QFileDialog::getSaveFileName(this,tr("保存文件"),"F:",tr("FCT文件(*.fct)"));
             if(tmpFilePath == "") return false;
             if(saveFile(tmpFilePath))
@@ -232,6 +243,8 @@ bool FlowChart::saveChartFile()
     }
     return true;
 }
+
+//새 플로우차트 소환?
 bool FlowChart::newChartFile()
 {
     if(!fileIsSaved)
@@ -347,6 +360,31 @@ bool FlowChart::delLine(Chart_Base *&cb)
     return false;
 }
 
+//added codes
+void FlowChart::deleteSelectChart(Chart_Base *cb)
+{
+    if (cb == curSelecChart)
+    {
+        if (curSelecChart->chartType == PaintChartType::LINE)
+        {
+            if(delLine(curSelecChart))
+            {
+                qDebug()<<"Error";
+            }
+        }
+
+        else
+        {
+            if (delChart(curSelecChart))
+            {
+                qDebug()<<"Error";
+            }
+        }
+    }
+}
+
+
+
 void FlowChart::hideMagSizeAll()
 {
     for(auto it = charts.begin();it!=charts.end();it++)
@@ -362,6 +400,7 @@ void FlowChart::hideMagSizeAll()
     emit disableStyle();
 }
 
+//실제 경로를 받아 저장하는
 bool FlowChart::saveFile(QString filePath)
 {
     QFile file(filePath);
@@ -386,6 +425,7 @@ bool FlowChart::saveFile(QString filePath)
     return true;
 }
 
+//경로 상의 파일을 불러오는 코드?
 bool FlowChart::loadFile(QString filePath)
 {
     QFile file(filePath);
@@ -434,6 +474,9 @@ bool FlowChart::loadFile(QString filePath)
         connect(cb,SIGNAL(sendThisClass(Chart_Base *, int,int)),this,SLOT(setSelecChart(Chart_Base *, int,int)));
         connect(cb,SIGNAL(setTypeChangeSize(ORIENTION)),this,SLOT(setTypeChangeSize(ORIENTION)));
         connect(cb,SIGNAL(setTypeCreateMagPoint(Chart_Base *,ORIENTION,int)),this,SLOT(setTypeCreateMagPoint(Chart_Base *,ORIENTION,int)));
+        //added codes
+        connect(cb, SIGNAL(deleteThisChartSignal(Chart_Base*)), this, SLOT(deleteSelectChart(Chart_Base*)));
+
         addChart(cb);
         cb->applyWidthHeight();
         cb->update();
@@ -477,6 +520,9 @@ bool FlowChart::loadFile(QString filePath)
         }
         connect(cl,SIGNAL(sendThisClass(Chart_Base *, int,int)),this,SLOT(setSelecChart(Chart_Base *, int,int)));
         connect(cl,SIGNAL(setTypeChangeSize(ORIENTION)),this,SLOT(setTypeChangeSize(ORIENTION)));
+        //added codes
+        connect(cl, SIGNAL(deleteThisChartSignal(Chart_Base*)), this, SLOT(deleteSelectChart(Chart_Base*)));
+
         cl->applyWidthHeight();
         cl->update();
         cl->show();
@@ -542,6 +588,11 @@ void FlowChart::mousePressEvent(QMouseEvent *event)
             {
                 connect(curPaintChart,SIGNAL(sendThisClass(Chart_Base *, int,int)),this,SLOT(setSelecChart(Chart_Base *, int,int)));
                 connect(curPaintChart,SIGNAL(setTypeChangeSize(ORIENTION)),this,SLOT(setTypeChangeSize(ORIENTION)));
+
+                //added codes
+                connect(curPaintChart, SIGNAL(deleteThisChartSignal(Chart_Base*)), this, SLOT(deleteSelectChart(Chart_Base*)));
+
+
                 addLine(curPaintChart);
                 Chart_Line *cl = dynamic_cast<Chart_Line*>(curSelecChart);
                 emit sendLineStyle(cl->paintChartDrawPen,cl->getStartLineHeadType(),cl->getEndLineHeadType());
@@ -551,6 +602,10 @@ void FlowChart::mousePressEvent(QMouseEvent *event)
                 connect(curPaintChart,SIGNAL(setTypeChangeSize(ORIENTION)),this,SLOT(setTypeChangeSize(ORIENTION)));
                 connect(curPaintChart,SIGNAL(setTypeCreateMagPoint(Chart_Base *,ORIENTION,int)),this,SLOT(setTypeCreateMagPoint(Chart_Base *,ORIENTION,int)));
                 //connect(curPaintChart,SIGNAL(hideThisClass()),this,SLOT(resetSeletcChart()));
+
+                //added codes
+                connect(curPaintChart, SIGNAL(deleteThisChartSignal(Chart_Base*)), this, SLOT(deleteSelectChart(Chart_Base*)));
+
                 addChart(curPaintChart);
                 emit sendChartStyle(curSelecChart->paintChartDrawPen,curSelecChart->paintChartFillPen);
             }
@@ -656,6 +711,9 @@ void FlowChart::mouseMoveEvent(QMouseEvent *event)
                 //newLineChart->setStyleSheet(QStringLiteral("background-color: rgb(100, 100, 100);"));
                 connect(newLineChart,SIGNAL(sendThisClass(Chart_Base *, int,int)),this,SLOT(setSelecChart(Chart_Base *, int,int)));
                 connect(newLineChart,SIGNAL(setTypeChangeSize(ORIENTION)),this,SLOT(setTypeChangeSize(ORIENTION)));
+                //added codes
+                connect(newLineChart, SIGNAL(deleteThisChartSignal(Chart_Base*)), this, SLOT(deleteSelectChart(Chart_Base*)));
+
                 newLineChart->setXY(newLineFromSelectChart->getMagiPointAbsX(magPointFromIndex),newLineFromSelectChart->getMagiPointAbsY(magPointFromIndex));
                 newLineChart->setStartChart(newLineFromSelectChart);
                 newLineChart->setStartMagIndex(magPointFromIndex);
@@ -809,70 +867,43 @@ void FlowChart::mouseReleaseEvent(QMouseEvent *event)
     }
 
 }
-// void FlowChart::keyPressEvent(QKeyEvent *ev)
-// {
-//     ev->ignore();
-//     switch(ev->key())
-//     {
-//         case Qt::Key_Escape:
-//         {
-//             if(curSelecChart)
-//             {
-//                 curSelecChart->hideMagSize();
-//                 curSelecChart = nullptr;
-//             }
-//         }break;
-//         case Qt::Key_Delete:
-//         {
-//             if(curSelecChart)
-//             {
-//                 if(curSelecChart->chartType == PaintChartType::LINE)
-//                 {
-//                     if(!delLine(curSelecChart))
-//                     {
-//                         qDebug()<<"Error";
-//                     }
-//                 }else{
-//                     if(!delChart(curSelecChart))
-//                     {
-//                         qDebug()<<"Error";
-//                     }
-//                 }
-//                 curSelecChart = nullptr;
-//             }
-//         }break;
-// #if 0
-//         case Qt::Key_Q:
-//         {
-//             qDebug()<<"总个数：charts:"<<charts.size()<<",lines:"<<line.size();
-//             for(auto it = charts.begin();it != charts.end();it++)
-//             {
-//                 qDebug()<<"\t磁力点个数："<<(*it)->magPoint.i_point.size();
-//                 for(auto magit = (*it)->magPoint.i_point.begin();magit!=(*it)->magPoint.i_point.end();magit++)
-//                 {
-//                     qDebug()<<"\t\t线头个数："<<(*magit)->i_lineStart.size()<<"，线尾个数："<<(*magit)->i_lineEnd.size();
-//                     for(auto magLineStIt = (*magit)->i_lineStart.begin();magLineStIt != (*magit)->i_lineStart.end();magLineStIt++)
-//                     {
-//                         qDebug()<<"\t\t\t线头ID："<<(*magLineStIt)->getID();
-//                     }
-//                     for(auto magLineEnIt = (*magit)->i_lineEnd.begin();magLineEnIt != (*magit)->i_lineEnd.end();magLineEnIt++)
-//                     {
-//                         qDebug()<<"\t\t\t线尾ID："<<(*magLineEnIt)->getID();
-//                     }
-//                 }
-//             }
-//             qDebug();
-//             for(auto it = line.begin();it != line.end();it++)
-//             {
-//                 qDebug()<<"\t线头："<<((dynamic_cast<Chart_Line*>(*it)->getStartChart() == nullptr)?"-":"有")<<"，线尾："<<(((dynamic_cast<Chart_Line*>(*it)->getEndChart()) == nullptr)?"-":"有");
-//             }
-//         }break;
-// #endif
-//         default:{
-//             ev->ignore();
-//         }
-//     }
-// }
+
+//added codes
+void FlowChart::keyPressEvent(QKeyEvent *ev)
+{
+    ev->ignore();
+    Qt::KeyboardModifiers modifiers = ev->modifiers();
+
+    switch(ev->key())
+    {
+        case Qt::Key_C:
+        {
+
+            if (modifiers & Qt::ControlModifier)
+            {
+                // Ctrl + C
+                qDebug() << "Ctrl + C Pressed";
+
+
+
+            }
+        } break;
+
+        case Qt::Key_V:
+        {
+
+            if (modifiers & Qt::ControlModifier)
+            {
+                // Ctrl + V
+                qDebug() << "Ctrl + V Pressed";
+
+
+
+            }
+        } break;
+
+    }
+}
 
 
 //add method for text search and replace, highlight
@@ -946,13 +977,16 @@ void FlowChart::onHighlight(QString searchText)
             QTextCharFormat format;
             format.setFontWeight(QFont::Bold);
             format.setFontUnderline(true);
-            format.setForeground(Qt::red);
+            //format.setBackground(Qt::red); //fix
+
+            //add clear background
+            //format.clearBackground();
 
             while (!cursor.isNull() && !cursor.atEnd()) {
                 cursor = result->chartText.textType2->document()->find(searchText, cursor);
 
                 if (!cursor.isNull()) {
-                    cursor.mergeCharFormat(format);
+                    cursor.setCharFormat(format);
                 }
             }
 
@@ -961,7 +995,7 @@ void FlowChart::onHighlight(QString searchText)
             qDebug() << "Text on";
             qDebug() << result->chartText.textType2->toPlainText();
 
-
+            result->chartText.textType2->update(); // add
 
             // QString fullText = result->chartText.textType1->text();
             // //QString highlightText;
@@ -991,13 +1025,16 @@ void FlowChart::onHighlight(QString searchText)
             QTextCharFormat format;
             format.setFontWeight(QFont::Bold);
             format.setFontUnderline(true);
-            format.setForeground(Qt::red);
+            //format.setBackground(Qt::red); // fix
+
+            //add clear background
+            //format.clearBackground();
 
             while (!cursor.isNull() && !cursor.atEnd()) {
                 cursor = result->chartText.textType2->document()->find(searchText, cursor);
 
                 if (!cursor.isNull()) {
-                    cursor.mergeCharFormat(format);
+                    cursor.setCharFormat(format);
                 }
             }
 
@@ -1014,9 +1051,9 @@ void FlowChart::onHighlight(QString searchText)
             // format.setForeground(Qt::red);
 
             // cursor.select(QTextCursor::Document);
-            // cursor.mergeCharFormat(format);
+            // cursor.setCharFormat(format);
             // result->chartText.textType2->setTextCursor(cursor);
-
+            result->chartText.textType2->update(); // add
         }
     }
 }
@@ -1033,10 +1070,16 @@ void FlowChart::offHighlight()
 
             format.setFontWeight(QFont::Normal);
             format.setFontUnderline(false);
-            format.setForeground(Qt::black);
+            //format.setForeground(Qt::black);
 
+
+
+            //add clear background
+            format.clearForeground();
+            format.clearBackground();
+            cursor.beginEditBlock();
             cursor.select(QTextCursor::Document);
-            cursor.mergeCharFormat(format);
+            cursor.setCharFormat(format); //add
             result->chartText.textType2->setTextCursor(cursor);
 
 
@@ -1048,7 +1091,8 @@ void FlowChart::offHighlight()
             // QPalette palette = result->chartText.textType1->palette();
             // palette.setColor(QPalette::WindowText, Qt::black);
             // result->chartText.textType1->setPalette(palette);
-
+            cursor.endEditBlock(); // add
+            result->chartText.textType2->update(); // add
         }
 
         else {
@@ -1057,11 +1101,17 @@ void FlowChart::offHighlight()
 
             format.setFontWeight(QFont::Normal);
             format.setFontUnderline(false);
-            format.setForeground(Qt::black);
+            //format.setForeground(Qt::black);
 
+            //add clear background
+            format.clearForeground();
+            format.clearBackground();
+            cursor.beginEditBlock(); //add
             cursor.select(QTextCursor::Document);
-            cursor.mergeCharFormat(format);
+            cursor.setCharFormat(format);
             result->chartText.textType2->setTextCursor(cursor);
+            cursor.endEditBlock(); // add
+            result->chartText.textType2->update(); // add
         }
     }
 }

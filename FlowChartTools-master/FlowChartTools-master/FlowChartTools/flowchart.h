@@ -114,7 +114,7 @@ virtual void paintEvent(QPaintEvent *event);
 virtual void mousePressEvent(QMouseEvent *event);
 virtual void mouseMoveEvent(QMouseEvent *event);
 virtual void mouseReleaseEvent(QMouseEvent *event);
-// virtual void keyPressEvent(QKeyEvent *ev);
+virtual void keyPressEvent(QKeyEvent *ev); //added codes
 // virtual void keyReleaseEvent(QKeyEvent *ev);
 
 //bool eventFilter(QObject *target, QEvent *event);
@@ -167,6 +167,9 @@ public slots:
     bool openChartFile();   // 打开文件
     bool saveChartFile();   // 保存文件
     bool newChartFile();    // 新建文件
+
+    //addded codes
+    void deleteSelectChart(Chart_Base * cb);
 
 };
 

@@ -980,7 +980,7 @@ QDataStream &operator<<(QDataStream &fout,  const Chart_Base &cb)
 }
 QDataStream &operator>>(QDataStream &fin, Chart_Base &cb)
 {
-    //fin.readRawData(reinterpret_cast<char*>(&cb.chartType),sizeof(PaintChartType));
+    fin.readRawData(reinterpret_cast<char*>(&cb.chartType),sizeof(PaintChartType));
     fin.readRawData(reinterpret_cast<char*>(&cb.ID),sizeof(int));
     fin>>cb.chartText;//>>cb.magPoint;
     fin>>cb.paintStart>>cb.paintEnd>>cb.widgetStart>>cb.widgetEnd>>cb.paintChartDrawPen>>cb.paintChartFillPen;
@@ -1162,6 +1162,15 @@ void Chart_Base::mousePressEvent(QMouseEvent *event)
 {
     //if(curFlag == MOUSE_EVENT_TYPE::NONE)
     {
+
+        //added codes
+        if (event->button() == Qt::RightButton)
+        {
+            emit deleteThisChartSignal(this);
+            return;
+        }
+
+
         ORIENTION direct = ORIENTION::NONE;
         int index;
 
@@ -1194,6 +1203,10 @@ void Chart_Base::mousePressEvent(QMouseEvent *event)
             showAll = false;
             event->ignore();
         }
+
+
+
+
 
     }
     //else
